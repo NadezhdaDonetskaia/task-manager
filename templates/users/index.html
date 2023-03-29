@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% load i18n %}
+{% block title %}
+  {% translate title %}
+{% endblock %}
+
+{% block content %}
+<div class="container wrapper flex-grow-1">
+
+      <h1 class="my-4">{% translate page_name %}</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      {% for column in columns %}
+      <th>{% translate column %}</th>
+      {% endfor %}
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+
+      <tr>
+        {% for user in users %}
+
+        <td>user.id</td>
+        <td>user.username</td>
+        <td>user.get_full_name</td>
+        <td>user.timestamp</td>
+
+        {% endfor %}
+      </tr>
+  </tbody>
+</table>
+
+    </div>
+{% endblock %}
