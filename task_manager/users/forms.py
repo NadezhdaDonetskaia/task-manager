@@ -10,7 +10,7 @@ class UserLoginForm(forms.AuthenticationForm):
     field = ['username', 'password']
 
 
-class UserAddForm(forms.UserCreationForm):
+class UserAddForm(UserCreationForm):
     class Meta:
         model = User
         model.username.help_text = 'Только буквы, цифры и символы @/./+/-/_.'
