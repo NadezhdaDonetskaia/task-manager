@@ -32,11 +32,34 @@ class UserShowView(View):
 class UserLoginView(View):
 
     def get(self, request, *args, **kwargs):
+        title = 'Login'
         form = UserLoginForm()
-        return render(request, 'user_login_in', {'form': form})
+        return render(request, 'users/login.html', {
+            'form': form,
+            'title': title,
+        })
 
     def post(self, request, *args, **kwargs):
-        form = UserLoginForm(request.POST)
+        title = 'Login'
+        user_form = UserLoginForm(request.POST)
+        if user_form.is_valid():
+            logger.debug(f'Form login is valid')
+            user_name = user_form.username
+            message_success = f'Welcome {user_name}'
+            return redirect('index.html', {
+                'message_success': message_success,
+            })
+        logger.error(user_form.errors)
+        logger.debug('form user login is\'valid')
+        errors = user_form.errors
+        message = 'Please enter the correct username and password. Both fields can be case sensitive.'
+        return render(request, 'users/create.html', {
+            'form': user_form,
+            'title': title,
+            'errors': errors,
+            'message': message
+        })
+
 
 
 
@@ -53,22 +76,24 @@ class UserFormCreateView(View):
         title = 'Registration'
         user_form = UserAddForm(request.POST)
         if user_form.is_valid():
-            logger.debug(f'Form valid!!!')
+            logger.debug(f'Form user create is valid')
             new_user = user_form.save(commit=False)
+            message = f'User {user_form.cleaned_data["username"]} successfully registered'
             new_user.set_password(user_form.cleaned_data['password1'])
             new_user.save()
-            return redirect('users/login.html', {
+            return redirect('home', {
                 'user': new_user,
+                'message_success': message,
             })
-        else:
-            logger.debug(user_form.errors)
-            logger.debug(user_form.error_messages)
-            errors = user_form.errors
-            return render(request, 'users/create.html', {
-                'form': user_form,
-                'title': title,
-                'errors': errors,
-            })
+
+        logger.error(user_form.errors)
+        logger.debug(user_form.error_messages)
+        errors = user_form.errors
+        return render(request, 'users/create.html', {
+            'form': user_form,
+            'title': title,
+            'errors': errors,
+        })
 
 
 class UserFormEditView(View):
