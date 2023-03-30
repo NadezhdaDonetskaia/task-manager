@@ -42,10 +42,15 @@ class UserLoginView(View):
 
 class UserFormCreateView(View):
     def get(self, request, *args, **kwargs):
+        title = 'Registration'
         form = UserAddForm()
-        return render(request, 'users/create.html', {'form': form})
+        return render(request, 'users/create.html', {
+            'form': form,
+            'title': title,
+        })
 
     def post(self, request, *args, **kwargs):
+        title = 'Registration'
         user_form = UserAddForm(request.POST)
         if user_form.is_valid():
             logger.debug(f'Form valid!!!')
@@ -53,8 +58,15 @@ class UserFormCreateView(View):
             new_user.set_password(user_form.cleaned_data['password1'])
             new_user.save()
             return redirect('users/index.html')
-        logger.debug(f'Form NOT valid!!!')
-        return render(request, 'users/create.html', {'form': user_form})
+        else:
+            logger.debug(user_form.errors)
+            logger.debug(user_form.error_messages)
+            messages = user_form.error_messages
+            return render(request, 'users/create.html', {
+                'form': user_form,
+                'title': title,
+                'messages': messages,
+            })
 
 
 class UserFormEditView(View):

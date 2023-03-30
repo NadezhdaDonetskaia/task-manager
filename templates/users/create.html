@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% load i18n %}
+
+{% block title %}
+  {% translate title %}
+{% endblock %}
+
+
+{% block content %}
+
+
+
+    <h1 class="my-4">{% translate title %}</h1>
+<form method="post">
+  {% csrf_token %}
+
+
+  {% for field in form %}
+    {% if field.errors %}
+    <div class="form-group is-invalid">
+        <label>
+            {% translate field.label_tag %}
+        </label>
+        <input type="text"  maxlength="150" class="form-control is-invalid"  title="" required="" >
+        <div class="invalid-feedback">
+            {{ messages.password_mismatch }}
+
+        </div>
+    </div>
+    {% else %}
+    <div class="form-group is-valid">
+        <label>
+            {% translate field.label_tag %}
+        </label>
+        <input type="text"  maxlength="150" class="form-control is-valid"  title="" required="" >
+    </div>
+    {% endif %}
+    <small class="form-text text-muted">
+      {% translate field.help_text %}
+    </small>
+
+  {% endfor %}
+
+  <div class="form-group">
+    <input class="btn btn-primary" type="submit" value="{% translate title %}">
+  </div>
+</form>
+
+{% endblock %}
