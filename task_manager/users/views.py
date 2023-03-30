@@ -57,15 +57,17 @@ class UserFormCreateView(View):
             new_user = user_form.save(commit=False)
             new_user.set_password(user_form.cleaned_data['password1'])
             new_user.save()
-            return redirect('users/index.html')
+            return redirect('users/login.html', {
+                'user': new_user,
+            })
         else:
             logger.debug(user_form.errors)
             logger.debug(user_form.error_messages)
-            messages = user_form.error_messages
+            errors = user_form.errors
             return render(request, 'users/create.html', {
                 'form': user_form,
                 'title': title,
-                'messages': messages,
+                'errors': errors,
             })
 
 

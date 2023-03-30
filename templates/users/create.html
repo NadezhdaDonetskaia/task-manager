@@ -23,10 +23,9 @@
         <label>
             {% translate field.label_tag %}
         </label>
-        <input type="text"  maxlength="150" class="form-control is-invalid"  title="" required="" >
+        {{ field }}
         <div class="invalid-feedback">
-            {{ messages.password_mismatch }}
-
+            {{ errors }}
         </div>
     </div>
     {% else %}
@@ -34,13 +33,12 @@
         <label>
             {% translate field.label_tag %}
         </label>
-        <input type="text"  maxlength="150" class="form-control is-valid"  title="" required="" >
+        {{ field }}
     </div>
     {% endif %}
     <small class="form-text text-muted">
       {% translate field.help_text %}
     </small>
-
   {% endfor %}
 
   <div class="form-group">
