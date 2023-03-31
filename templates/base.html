@@ -26,29 +26,48 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'users_index' %}">{% translate "Users" %}</a>
           </li>
-<!--          {% if request.user.is_authenticated %}-->
-<!--            <li class="nav-item">-->
-<!--              <a class="nav-link" href="{% url 'users_index' %}">{% translate "Users" %}</a>-->
-<!--            </li>-->
-<!--           {% endif %} -->
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">{% translate "Статусы" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">{% translate "Метки" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">{% translate "Задачи" %}</a>
+            </li>
+           {% endif %}
 
         </ul>
         <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+            <form action="{% url 'user_logout' %}" method="post">
+                    {% csrf_token %}
+                <input type="submit" value= {% translate "Выйти" %} >
+                </form>
+            </li>
+            {% else %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'user_login' %}">{% translate "Login" %}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'user_create' %}">{% translate "Registration" %}</a>
             </li>
+            {% endif %}
         </ul>
       </div>
     </nav>
 
-{% if message_success %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="close">×</button>
-        {% translate message %}
-</div>
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'info' %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% elif message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
 {% endif %}
 
 

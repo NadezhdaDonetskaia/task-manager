@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% load i18n %}
+
+{% block title %}
+  {% translate title %}
+{% endblock %}
+
+
+{% block content %}
+
+
+
+    <h1 class="my-4">{% translate title %}</h1>
+<form method="post">
+  {% csrf_token %}
+
+  {% for field in form %}
+    <div class="form-group">
+        <label for="{{ field.id }}">{{ field.label_tag }}</label>
+        <input type="text" readonly name="{{ field.name }}" value="{{ field.value }}" maxlength="150" class="form-control" placeholder="{{ field.label }}" title="" required="" id="{{ field.id }}">
+    </div>
+  {% endfor %}
+
+  <div class="form-group">
+    <input class="btn btn-primary" type="submit" value="{% translate title %}">
+  </div>
+</form>
+
+{% endblock %}

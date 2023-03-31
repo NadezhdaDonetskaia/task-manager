@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views import View
 from django.utils.translation import gettext
@@ -26,8 +27,12 @@ class UsersIndexView(View):
 class UserShowView(View):
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, id=kwargs['id'])
-        return render(request, 'user_show', context={
+        form = UserEditForm(instance=user)
+        title = user.username
+        return render(request, f'users/show.html', context={
             'user': user,
+            'title': title,
+            'form': form,
         })
 
 
@@ -50,29 +55,23 @@ class UserLoginView(View):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                message_success = f'Welcome {username}'
-                return redirect('home', {
-                    'message_success': message_success
-                })
+                messages.info(request, f'Welcome {username}')
+                return redirect('home')
             else:
                 messages.error(request, 'Неверные имя пользователя или пароль.')
         logger.debug('form user login is\'nt valid')
-        errors = user_form.error_messages
-        logger.error(errors)
+        messages.error(request, user_form.error_messages)
         return render(request, 'users/create.html', {
             'form': user_form,
             'title': title,
-            'errors': errors.values(),
         })
 
 
 class UserLogoutView(LogoutView):
     def post(self, request, *args, **kwargs):
         logout(request)
-        messages_success = 'You are logged out'
-        return redirect('home', {
-            'messages_success': messages_success,
-        })
+        messages.info(request, 'You are logged out')
+        return redirect('home')
 
 
 class UserFormCreateView(View):
@@ -90,13 +89,10 @@ class UserFormCreateView(View):
         if user_form.is_valid():
             logger.debug(f'Form user create is valid')
             new_user = user_form.save(commit=False)
-            message = f'User {user_form.cleaned_data["username"]} successfully registered'
+            messages.info(request, f'User {user_form.cleaned_data["username"]} successfully registered')
             new_user.set_password(user_form.cleaned_data['password1'])
             new_user.save()
-            return redirect('home', {
-                'user': new_user,
-                'message_success': message,
-            })
+            return redirect('home')
 
         logger.error(user_form.errors)
         logger.debug(user_form.error_messages)
@@ -110,30 +106,33 @@ class UserFormCreateView(View):
 
 class UserFormEditView(View):
 
+    @login_required
     def get(self, request, *args, **kwargs):
-        user_id = kwargs.get('id')
-        user = User.objects.get(id=user_id)
+        user = get_object_or_404(User, id=request.user.id)
         form = UserEditForm(instance=user)
-        return render(request, 'user_update', {'form': form, 'user_id': user_id})
+        return render(request, 'user_update', {'form': form, 'user': user})
 
+    @login_required
     def post(self, request, *args, **kwargs):
-        user_id = kwargs.get('id')
-        user = User.objects.get(id=user_id)
-        form = UserEditForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('users_index')
+        user = get_object_or_404(User, id=request.user.id)
+        form_change = UserEditForm(request.POST, instance=user)
+        if form_change.is_valid():
+            form_change.save()
+            messages.success(request, 'Информация о пользователе была успешно обновлена')
+            return redirect('home')
 
-        return render(request, 'user_update', {'form': form, 'user_id': user_id})
+        return render(request, 'user_update', {'form': form_change, 'user': user})
 
 
 class UserFormDeleteView(View):
 
+    @login_required
     def get(self, request, *args, **kwargs):
-        user_id = kwargs.get('id')
-        user = User.objects.get(id=user_id)
-        return render(request, 'user_delete', {'user_id': user_id})
+        user = get_object_or_404(User, id=request.user.id)
+        form_delete = User
+        return render(request, 'user_delete', {'user': user})
 
+    @login_required
     def post(self, request, *args, **kwargs):
         user_id = kwargs.get('id')
         user = User.objects.get(id=user_id)
