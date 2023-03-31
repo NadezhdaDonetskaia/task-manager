@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views import View
 from django.utils.translation import gettext
+from django.contrib.auth.views import LogoutView
 
 from task_manager.users.models import User
 from task_manager.users.forms import UserAddForm, UserEditForm, UserLoginForm
@@ -11,7 +12,6 @@ from task_manager.logger_config import logger
 
 
 class UsersIndexView(View):
-
     def get(self, request, *args, **kwargs):
         page_name = gettext('Users')
         columns = [gettext('ID'), gettext('User Name'), gettext('Full name'), gettext('Date of creation')]
@@ -32,7 +32,6 @@ class UserShowView(View):
 
 
 class UserLoginView(View):
-
     def get(self, request, *args, **kwargs):
         title = 'Login'
         form = UserLoginForm()
@@ -64,6 +63,15 @@ class UserLoginView(View):
             'form': user_form,
             'title': title,
             'errors': errors.values(),
+        })
+
+
+class UserLogoutView(LogoutView):
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        messages_success = 'You are logged out'
+        return redirect('home', {
+            'messages_success': messages_success,
         })
 
 
