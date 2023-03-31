@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 from django.views import View
 from django.utils.translation import gettext
 
@@ -44,23 +46,25 @@ class UserLoginView(View):
         user_form = UserLoginForm(request.POST)
         if user_form.is_valid():
             logger.debug(f'Form login is valid')
-            user_name = user_form.username
-            message_success = f'Welcome {user_name}'
-            return redirect('index.html', {
-                'message_success': message_success,
-            })
-        logger.error(user_form.errors)
-        logger.debug('form user login is\'valid')
-        errors = user_form.errors
-        message = 'Please enter the correct username and password. Both fields can be case sensitive.'
+            username = user_form.cleaned_data['username']
+            password = user_form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                message_success = f'Welcome {username}'
+                return redirect('home', {
+                    'message_success': message_success
+                })
+            else:
+                messages.error(request, 'Неверные имя пользователя или пароль.')
+        logger.debug('form user login is\'nt valid')
+        errors = user_form.error_messages
+        logger.error(errors)
         return render(request, 'users/create.html', {
             'form': user_form,
             'title': title,
-            'errors': errors,
-            'message': message
+            'errors': errors.values(),
         })
-
-
 
 
 class UserFormCreateView(View):
