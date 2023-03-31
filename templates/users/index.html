@@ -8,28 +8,26 @@
 
 {% block content %}
 <div class="container wrapper flex-grow-1">
-
-      <h1 class="my-4">{% translate page_name %}</h1>
+    <h1 class="my-4">{% translate 'Users' %}</h1>
 
 <table class="table table-striped">
-  <thead>
-    <tr>
-      {% for column in columns %}
-      <th>{% translate column %}</th>
-      {% endfor %}
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-
-
-        {% for user in users %}
+    <thead>
+          <tr>
+            <th>id</th>
+            <th>{% translate 'User name' %}</th>
+            <th>{% translate 'Full name' %}</th>
+            <th>{% translate 'Created' %}</th>
+            <th></th>
+          </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
      <tr>
-        <td>{{ user.id}}</td>
+        <td>{{ user.id }}</td>
         <td>
             <a class="nav-link" href="{% url 'user_show' id=user.id %}">{{ user.username }}</a>
         </td>
-        <td>{{ user.get_full_name }}</td>
+        <td>{{ user.first_name }} {{ user.last_name }}</td>
         <td>{{ user.date_joined }}</td>
          <td>
           <a href="{% url 'user_update' id=user.id %}">

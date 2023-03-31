@@ -62,7 +62,7 @@
 
 {% if messages %}
     {% for message in messages %}
-        {% if message.tags == 'info' %}
+        {% if message.tags == 'success' %}
             <div class="alert alert-success" role="alert">{{ message }}</div>
         {% elif message.tags == 'error' %}
             <div class="alert alert-danger" role="alert">{{ message }}</div>

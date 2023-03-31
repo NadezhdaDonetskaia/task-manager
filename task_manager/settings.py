@@ -98,7 +98,7 @@ DATABASES = {
     ),
 }
 
-AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = 'home'
 
 BOOTSTRAP4 = {
 

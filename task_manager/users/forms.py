@@ -1,24 +1,15 @@
-from django.contrib.auth import forms
-
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from task_manager.users.models import User
-
-
-class UserLoginForm(forms.AuthenticationForm):
-    username = User.username
-    password = User.password
-    field = ['username', 'password']
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
+from django.utils.translation import gettext
+from django.contrib.auth.models import User
 
 
-class UserAddForm(UserCreationForm):
-    class Meta:
-        model = User
-        model.username.help_text = 'Только буквы, цифры и символы @/./+/-/_.'
-        fields = ('first_name', 'last_name', 'username', 'password1', 'password2')
-
-
-class UserEditForm(UserChangeForm):
+class UserRegistrationForm(UserCreationForm):
+    password2 = forms.CharField(
+        label=gettext('Повторите пароль'),
+        widget=forms.PasswordInput,
+    )
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'password')
+        fields = ('username', 'first_name', 'last_name', 'password1', 'password2')

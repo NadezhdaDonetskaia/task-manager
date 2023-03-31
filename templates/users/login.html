@@ -3,37 +3,18 @@
 {% bootstrap_css %}
 {% load i18n %}
 
-{% block title %}
-  {% translate title %}
-{% endblock %}
-
 
 {% block content %}
-<div class="container wrapper flex-grow-1">
-      <h1 class="my-4">{% translate title %}</h1>
-
-{% if message %}
-<div class="alert alert-danger alert-dismissible" role="alert">
-    <button class="close" type="button" data-dismiss="alert" aria-label="close">×</button>
-        {% translate message %}
-</div>
-{% endif %}
-
-<form action="{% url 'user_login' %}" method="post">
-    {% for field in form %}
+  <h2>{% trans "Вход" %}</h2>
+  <form method="post">
     {% csrf_token %}
-    <div class="form-group">
-      <label>
-            {% translate field.label_tag %}
-        </label>
-      {{ field }}
-    </div>
-    {% endfor %}
-   <div class="form-group">
-        <input class="btn btn-primary" type="submit" value="{% translate 'Login' %}">
-    </div>
-
-</form>
-
-</div>
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-primary">{% trans "Войти" %}</button>
+  </form>
 {% endblock %}
+
+<!--{% block title %}-->
+<!--  {% translate title %}-->
+<!--{% endblock %}-->
+
+
