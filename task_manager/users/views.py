@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic import ListView, DetailView
+from django.shortcuts import redirect
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.utils.translation import gettext
@@ -46,8 +46,9 @@ class UserLoginView(LoginView):
         messages.success(self.request, gettext('Вы успешно вошли!'))
         return response
 
-class UserLogoutView(LoginRequiredMixin, LogoutView):
-    next_page = reverse_lazy('user_login')
+
+class UserLogoutView(UserPassesTestMixin, LogoutView):
+    next_page = reverse_lazy('home')
 
     def get_next_page(self):
         next_page = super().get_next_page()
@@ -65,13 +66,22 @@ class UserDetailView(DetailView):
     model = User
     template_name = 'users/show.html'
     context_object_name = 'user'
+    fields = ['username', 'first_name', 'last_name']
+    pk_url_kwarg = 'id'
 
 
-class UserUpdateView(LoginRequiredMixin, UpdateView):
+class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = User
-    fields = ['username', 'email']
+    fields = ['username', 'first_name', 'last_name']
     template_name = 'users/update.html'
-    success_url = reverse_lazy('user_show')
+    pk_url_kwarg = 'id'
+
+    def test_func(self):
+        return self.get_object() == self.request.user
+
+    def handle_no_permission(self):
+        messages.error(self.request, gettext("У вас нет прав для изменения этого профиля."))
+        return redirect('user_show')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -83,11 +93,30 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         messages.error(self.request, gettext('Ошибка обновления!'))
         return response
 
+    def get_success_url(self):
+        return reverse_lazy('user_show', kwargs={'id': self.object.id})
 
-class UserDeleteView(LoginRequiredMixin, DeleteView):
+
+class UserDeleteView(UserPassesTestMixin, DeleteView):
     model = User
-    success_url = reverse_lazy('user_show')
+    pk_url_kwarg = 'id'
+
+    def test_func(self):
+        return self.get_object() == self.request.user
+
+    def handle_no_permission(self):
+        messages.error(self.request, gettext("У вас нет прав для удаления этого профиля."))
+        return redirect('user_show')
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, gettext('Пользователь удален!'))
         return super().delete(request, *args, **kwargs)
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        messages.error(self.request, gettext('Ошибка удаления!'))
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy('user_show', kwargs={'id': self.object.id})
+

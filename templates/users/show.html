@@ -3,29 +3,48 @@
 {% bootstrap_css %}
 {% load i18n %}
 
-{% block title %}
-  {% translate title %}
-{% endblock %}
+
 
 
 {% block content %}
-
-
-
-    <h1 class="my-4">{% translate title %}</h1>
-<form method="post">
-  {% csrf_token %}
-
-  {% for field in form %}
-    <div class="form-group">
-        <label for="{{ field.id }}">{{ field.label_tag }}</label>
-        <input type="text" readonly name="{{ field.name }}" value="{{ field.value }}" maxlength="150" class="form-control" placeholder="{{ field.label }}" title="" required="" id="{{ field.id }}">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h3 class="card-title">{{ user.username }}</h3>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th scope="row">{% trans 'Username' %}</th>
+                  <td>{{ user.username }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">{% trans 'First name' %}</th>
+                  <td>{{ user.first_name }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">{% trans 'Last name' %}</th>
+                  <td>{{ user.last_name }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer">
+            <a class="btn btn-primary" href="{% url 'user_update' user.id %}">
+              {% trans "Edit" %}
+            </a>
+            <form method="post" action="{% url 'user_delete' user.id %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">
+                {% trans "Delete" %}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-  {% endfor %}
-
-  <div class="form-group">
-    <input class="btn btn-primary" type="submit" value="{% translate title %}">
   </div>
-</form>
-
 {% endblock %}
