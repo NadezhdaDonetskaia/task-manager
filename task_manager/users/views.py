@@ -1,10 +1,9 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.models import User
 from django.utils.translation import gettext
 
@@ -13,17 +12,12 @@ from task_manager.logger_config import logger
 
 
 class UserRegistrationView(CreateView):
-    model = User
     form_class = UserRegistrationForm
     success_url = reverse_lazy('home')
     template_name = 'users/create.html'
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        # authenticate user after registration
-        user = authenticate(username=form.cleaned_data.get('username'),
-                            password=form.cleaned_data.get('password1'))
-        login(self.request, user)
         messages.success(self.request, gettext('Вы успешно зарегистрировались!'))
         return response
 
@@ -43,17 +37,20 @@ class UserLoginView(LoginView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, gettext('Вы успешно вошли!'))
+        messages.success(self.request, gettext('Вы успешно вошли в систему!'))
         return response
 
 
-class UserLogoutView(UserPassesTestMixin, LogoutView):
+class UserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
 
-    def get_next_page(self):
-        next_page = super().get_next_page()
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
         messages.success(self.request, gettext('Вы успешно вышли из системы!'))
-        return next_page
+        return response
+
+    def get_next_page(self):
+        return self.next_page
 
 
 class UserListView(ListView):
@@ -67,21 +64,33 @@ class UserDetailView(DetailView):
     template_name = 'users/show.html'
     context_object_name = 'user'
     fields = ['username', 'first_name', 'last_name']
-    pk_url_kwarg = 'id'
 
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = User
     fields = ['username', 'first_name', 'last_name']
     template_name = 'users/update.html'
-    pk_url_kwarg = 'id'
+
+    def get_success_url(self):
+        return reverse('user_update', kwargs={'pk': self.object.pk})
 
     def test_func(self):
-        return self.get_object() == self.request.user
+        if not self.request.user.is_authenticated:
+            logger.debug('User is not authenticated')
+            self.raise_exception = False
+            messages.error(self.request, gettext("Вы не авторизованы! Пожалуйста, выполните вход."))
+            return False
+        if self.request.user.pk != self.get_object().pk:
+            logger.debug('User not match')
+            self.raise_exception = False
+            messages.error(self.request, gettext("У вас нет прав для изменения этого профиля."))
+            return False
+        return True
 
     def handle_no_permission(self):
-        messages.error(self.request, gettext("У вас нет прав для изменения этого профиля."))
-        return redirect('user_show')
+        if not self.raise_exception:
+            return redirect(self.request.META['HTTP_REFERER'])
+        return super().handle_no_permission()
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -93,13 +102,9 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         messages.error(self.request, gettext('Ошибка обновления!'))
         return response
 
-    def get_success_url(self):
-        return reverse_lazy('user_show', kwargs={'id': self.object.id})
-
 
 class UserDeleteView(UserPassesTestMixin, DeleteView):
     model = User
-    pk_url_kwarg = 'id'
 
     def test_func(self):
         return self.get_object() == self.request.user
