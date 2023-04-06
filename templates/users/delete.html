@@ -10,8 +10,8 @@
   <div class="row">
     <div class="col-md-6 offset-md-3">
       <div class="card">
-        <div class="card-header">
-          {% trans "Подтверждение удаления пользователя" %}
+        <div class="card-header text-danger">
+          <h3>{% trans "Подтверждение удаления пользователя" %}</h3>
         </div>
         <div class="card-body">
           <form method="post">
@@ -20,7 +20,7 @@
               {% trans "Вы действительно хотите удалить пользователя" %} "{{ user }}"?
             </p>
             <button type="submit" class="btn btn-danger">{% trans "Удалить" %}</button>
-            <a href="{% url 'user_show' id=user.id %}" class="btn btn-secondary">{% trans "Отмена" %}</a>
+            <a href="{% url 'user_show' user.pk %}" class="btn btn-secondary">{% trans "Отмена" %}</a>
           </form>
         </div>
       </div>

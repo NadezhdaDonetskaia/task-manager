@@ -105,13 +105,28 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class UserDeleteView(UserPassesTestMixin, DeleteView):
     model = User
+    template_name = 'users/delete.html'
+
+    def get_success_url(self):
+        return reverse('user_delete', kwargs={'pk': self.object.pk})
 
     def test_func(self):
-        return self.get_object() == self.request.user
+        if not self.request.user.is_authenticated:
+            logger.debug('User is not authenticated')
+            self.raise_exception = False
+            messages.error(self.request, gettext("Вы не авторизованы! Пожалуйста, выполните вход."))
+            return False
+        if self.request.user.pk != self.get_object().pk:
+            logger.debug('User not match')
+            self.raise_exception = False
+            messages.error(self.request, gettext("У вас нет прав для изменения этого профиля."))
+            return False
+        return True
 
     def handle_no_permission(self):
-        messages.error(self.request, gettext("У вас нет прав для удаления этого профиля."))
-        return redirect('user_show')
+        if not self.raise_exception:
+            return redirect(self.request.META['HTTP_REFERER'])
+        return super().handle_no_permission()
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, gettext('Пользователь удален!'))
@@ -120,8 +135,3 @@ class UserDeleteView(UserPassesTestMixin, DeleteView):
     def form_invalid(self, form):
         response = super().form_invalid(form)
         messages.error(self.request, gettext('Ошибка удаления!'))
-        return response
-
-    def get_success_url(self):
-        return reverse_lazy('user_show', kwargs={'id': self.object.id})
-
