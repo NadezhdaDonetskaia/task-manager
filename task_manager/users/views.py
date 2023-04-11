@@ -17,11 +17,13 @@ class UserRegistrationView(CreateView):
     template_name = 'users/create.html'
 
     def form_valid(self, form):
+        logger.debug('Успешная регистрация')
         response = super().form_valid(form)
         messages.success(self.request, gettext('Вы успешно зарегистрировались!'))
         return response
 
     def form_invalid(self, form):
+        logger.error('Ошибка регистрации')
         response = super().form_invalid(form)
         messages.error(self.request, gettext('Ошибка регистрации!'))
         return response
@@ -31,11 +33,13 @@ class UserLoginView(LoginView):
     template_name = 'users/login.html'
 
     def form_invalid(self, form):
+        logger.error('Ошибка входа')
         response = super().form_invalid(form)
         messages.error(self.request, gettext('Ошибка входа!'))
         return response
 
     def form_valid(self, form):
+        logger.debug("Успешный вход в систему")
         response = super().form_valid(form)
         messages.success(self.request, gettext('Вы успешно вошли в систему!'))
         return response
@@ -119,7 +123,7 @@ class UserDeleteView(UserPassesTestMixin, DeleteView):
         if self.request.user.pk != self.get_object().pk:
             logger.debug('User not match')
             self.raise_exception = False
-            messages.error(self.request, gettext("У вас нет прав для изменения этого профиля."))
+            messages.error(self.request, gettext("У вас нет прав для удаления этого профиля."))
             return False
         return True
 
