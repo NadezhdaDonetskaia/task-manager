@@ -10,9 +10,18 @@ class StatusesTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(username='test_user', password='test_password')
-        self.client.login(username='test_user', password='test_password')
+
+    def test_status_creation(self):
+        status = Status(name='Test Status')
+        status.save()
+
+        self.assertEqual(Status.objects.count(), 1)
+        self.assertEqual(status.name, 'Test Status')
+        self.assertIsNotNone(status.created_at)
 
     def test_create_status_authenticated(self):
+        self.client.login(username='test_user', password='test_password')
+
         url = reverse('status_create')
         data = {'name': 'new_status', 'user': self.user.pk}
         response = self.client.post(url, data)
@@ -26,22 +35,29 @@ class StatusesTestCase(TestCase):
         self.assertNotContains(response.data['name'], 'new_status')
         self.assertEqual(response.status_code, 302)
         message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Надо войти в систему для создания статуса')
+        self.assertEqual(str(message[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
 
     def test_status_view_authenticated(self):
-        url = reverse('statuses_list')
-        response = self.client.get(url, {'user': self.user.pk})
+        self.client.login(username='test_user', password='test_password')
+        status1 = Status(name='Status 1')
+        status1.save()
+        status2 = Status(name='Status 2')
+        status2.save()
+
+        response = self.client.get('/statuses/')
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Status 1')
+        self.assertContains(response, 'Status 2')
 
     def test_statuses_view_unauthenticated(self):
         self.client.logout()
         response = self.client.get(reverse('statuses_list'))
         self.assertEqual(response.status_code, 302)
         message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Надо войти в систему для просмотра статусов')
+        self.assertEqual(str(message[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
 
     def test_status_update_authenticated(self):
-        Status.objects.create(name='new_status', user=self.user)
+        Status.objects.create(name='new_status')
         data = {'name': 'Updated status', 'user': self.user.pk}
         response = self.client.post(reverse('status_update', data))
         self.assertEqual(response.status_code, 302)
@@ -50,26 +66,26 @@ class StatusesTestCase(TestCase):
         self.assertEqual(str(message[0]), 'Статус успешно обновлен')
 
     def test_status_update_unauthenticated(self):
-        Status.objects.create(name='new_status', user=self.user)
+        Status.objects.create(name='new_status')
         self.client.logout()
         response = self.client.post(reverse('status_update',  {'text': 'Updated status'}))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.data['name'], 'new_status')
         message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Надо войти в систему для изменения статуса')
+        self.assertEqual(str(message[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
 
     def test_status_delete_authenticated(self):
-        Status.objects.create(name='new_status', user=self.user)
+        Status.objects.create(name='new_status')
         response = self.client.post(reverse('status_delete'))
         self.assertEqual(response.status_code, 302)
         message = list(messages.get_messages(response.wsgi_request))
         self.assertEqual(str(message[0]), 'Статус успешно удален')
 
     def test_status_delete_unauthenticated(self):
-        Status.objects.create(name='new_status', user=self.user)
+        Status.objects.create(name='new_status')
         self.client.logout()
         response = self.client.post(reverse('status_delete'))
         self.assertEqual(response.status_code, 302)
         message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Надо войти в систему для удаления статуса')
+        self.assertEqual(str(message[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
 
