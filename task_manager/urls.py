@@ -23,3 +23,6 @@ urlpatterns = [
     path('users/', include('task_manager.users.urls')),
     path('statuses/', include('task_manager.statuses.urls')),
 ]
+
+
+handler404 = views.page_not_found

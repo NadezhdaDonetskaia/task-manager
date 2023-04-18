@@ -11,4 +11,4 @@ Simple task manager app. [Live view here](https://python-project-lvl4-production
 
 | Hexlet tests and linter status |
 |---|
-[![Actions Status](https://github.com/Nella611/python-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/Nella611/python-project-lvl4/actions)
+[![Actions Status](https://gicdthub.com/Nella611/python-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/Nella611/python-project-lvl4/actions)
