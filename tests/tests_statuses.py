@@ -1,91 +1,52 @@
-from django.test import TestCase
-from django.contrib.auth.models import User
-from django.urls import reverse
-from django.contrib import messages
+from django.urls import reverse_lazy
+from task_manager.tasks.models import Task
+import pytest
+from tests.assert_ import redirect_to_login
 
-from task_manager.statuses.models import Status
+CREATE_URL = reverse_lazy('tasks:task_create')
+UPDATE_URL = 'tasks/{id}/edit'
+DELETE_URL = 'tasks/{id}/delete'
+INPUT_DATA = dict(name='name')
 
 
-class StatusesTestCase(TestCase):
+@pytest.fixture
+def model():
+    return Task
 
-    def setUp(self):
-        self.user = User.objects.create_user(username='test_user', password='test_password')
 
-    def test_status_creation(self):
-        status = Status(name='Test Status')
-        status.save()
+@pytest.mark.djando_db
+def test_create(client, model, input_data):
+    client.post(CREATE_URL, input_data)
+    assert model.objects.get(name=input_data['name'])
 
-        self.assertEqual(Status.objects.count(), 1)
-        self.assertEqual(status.name, 'Test Status')
-        self.assertIsNotNone(status.created_at)
 
-    def test_create_status_authenticated(self):
-        self.client.login(username='test_user', password='test_password')
+@pytest.mark.usefixtures('authorized')
+@pytest.mark.djando_db
+def test_update(client, model, input_data, created_object):
+    old_name = created_object.name
+    input_data['name'] = 'new_name'
+    client.post(UPDATE_URL.format(id=created_object.id), input_data)
+    assert model.objects.filter(name=old_name).count() == 0
+    assert model.objects.get(name=input_data['name'])
 
-        url = reverse('status_create')
-        data = {'name': 'new_status', 'user': self.user.pk}
-        response = self.client.post(url, data)
-        self.assertEqual(response.data['name'], 'new_status')
-        message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Статус успешно создан')
 
-    def test_create_status_unauthenticated(self):
-        self.client.logout()
-        response = self.client.post(reverse('status_create'), {'name': 'new_status'})
-        self.assertNotContains(response.data['name'], 'new_status')
-        self.assertEqual(response.status_code, 302)
-        message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
+@pytest.mark.usefixtures('authorized')
+@pytest.mark.djando_db
+def test_delete(client, model, input_data, created_object):
+    client.post(DELETE_URL.format(id=created_object.id))
+    assert model.objects.filter(name=created_object.id).count() == 0
 
-    def test_status_view_authenticated(self):
-        self.client.login(username='test_user', password='test_password')
-        status1 = Status(name='Status 1')
-        status1.save()
-        status2 = Status(name='Status 2')
-        status2.save()
 
-        response = self.client.get('/statuses/')
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Status 1')
-        self.assertContains(response, 'Status 2')
-
-    def test_statuses_view_unauthenticated(self):
-        self.client.logout()
-        response = self.client.get(reverse('statuses_list'))
-        self.assertEqual(response.status_code, 302)
-        message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
-
-    def test_status_update_authenticated(self):
-        Status.objects.create(name='new_status')
-        data = {'name': 'Updated status', 'user': self.user.pk}
-        response = self.client.post(reverse('status_update', data))
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.data['text'], 'Updated status')
-        message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Статус успешно обновлен')
-
-    def test_status_update_unauthenticated(self):
-        Status.objects.create(name='new_status')
-        self.client.logout()
-        response = self.client.post(reverse('status_update',  {'text': 'Updated status'}))
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.data['name'], 'new_status')
-        message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
-
-    def test_status_delete_authenticated(self):
-        Status.objects.create(name='new_status')
-        response = self.client.post(reverse('status_delete'))
-        self.assertEqual(response.status_code, 302)
-        message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Статус успешно удален')
-
-    def test_status_delete_unauthenticated(self):
-        Status.objects.create(name='new_status')
-        self.client.logout()
-        response = self.client.post(reverse('status_delete'))
-        self.assertEqual(response.status_code, 302)
-        message = list(messages.get_messages(response.wsgi_request))
-        self.assertEqual(str(message[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
-
+@pytest.mark.parametrize(
+    ('url', 'params'),
+    [(UPDATE_URL, {'name': 'other'}), (DELETE_URL, {})]
+)
+@pytest.mark.djando_db
+def test_unauthorized(
+        client, model, created_object, url, params, input_data
+):
+    current_params = ({**input_data, **params} if params else {})
+    response = client.post(url.format(id=created_object.id), current_params)
+    assert redirect_to_login(response)
+    current_status = model.objects.get(id=created_object.id)
+    assert current_status == created_object

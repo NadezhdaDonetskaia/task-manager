@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     'task_manager.statuses',
     'task_manager.tasks',
     'bootstrap4',
-    'tests.testapp.apps.TestAppConfig',
 ]
 
 MIDDLEWARE = [
