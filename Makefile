@@ -14,4 +14,4 @@ make lint:
 	poetry run flake8 task_manager
 
 run_test:
-	poetry run coverage run manage.py test -v 2 && coverage report html
+	poetry run pytest --cov=task_manager tests/ --cov-report xml

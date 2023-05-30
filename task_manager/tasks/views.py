@@ -15,10 +15,10 @@ class TasksListView(LoginRequiredMixin, ListView):
     template_name = 'tasks/list.html'
     context_object_name = 'tasks'
 
-    def handle_no_permission(self):
-        logger.error('User do not auth')
-        messages.error(self.request, gettext("Вы не авторизованы! Пожалуйста, выполните вход."))
-        return redirect('user_login')
+    # def handle_no_permission(self):
+    #     logger.error('User do not auth')
+    #     messages.error(self.request, gettext("Вы не авторизованы! Пожалуйста, выполните вход."))
+    #     return redirect('user_login')
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):

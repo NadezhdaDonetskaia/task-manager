@@ -16,8 +16,3 @@ class Task(models.Model):
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.author_id:
-            self.author = kwargs.pop('author', None) or User.objects.first()
-        super(Task, self).save(*args, **kwargs)

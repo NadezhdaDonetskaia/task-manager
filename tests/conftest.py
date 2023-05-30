@@ -35,8 +35,7 @@ def created_object(create_object):
 @pytest.fixture
 def user():
     user_model = get_user_model()
-    user_ = user_model(USER_DATA)
-    user_.set_passwprd(USER_PASSWORD)
+    user_ = user_model.objects.create_user(USER_DATA)
     user_.save()
     return user_
 
