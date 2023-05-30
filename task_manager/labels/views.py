@@ -7,46 +7,45 @@ from django.utils.translation import gettext
 
 from task_manager.logger_config import logger
 
-from task_manager.tasks.models import Task
+from task_manager.labels.models import Label
 
 
-class TasksListView(LoginRequiredMixin, ListView):
-    model = Task
-    template_name = 'tasks/list.html'
-    context_object_name = 'tasks'
+class LabelListView(LoginRequiredMixin, ListView):
+    model = Label
+    template_name = 'labels/list.html'
+    context_object_name = 'labels'
 
 
-class TaskCreateView(LoginRequiredMixin, CreateView):
-    model = Task
-    template_name = 'tasks/create.html'
+class LabelCreateView(LoginRequiredMixin, CreateView):
+    model = Label
+    template_name = 'labels/create.html'
     fields = ['name']
-    success_url = reverse_lazy('tasks_list')
+    success_url = reverse_lazy('labels_list')
 
-    #
     def form_valid(self, form):
+        logger.debug('Label status crete valid')
         form.instance.author = self.request.user
         return super().form_valid(form)
 
 
-class TaskUpdateView(LoginRequiredMixin, UpdateView):
-    model = Task
-    template_name = 'tasks/update.html'
+class LabelUpdateView(LoginRequiredMixin, UpdateView):
+    model = Label
+    template_name = 'labels/update.html'
     fields = ['name']
-    success_url = reverse_lazy('tasks_list')
+    success_url = reverse_lazy('labels_list')
 
     def form_valid(self, form):
+        logger.debug('Label status update valid')
         messages.success(self.request, gettext('Статус успешно изменён'))
         return super().form_valid(form)
 
 
-class TaskDeleteView(LoginRequiredMixin, DeleteView):
-    model = Task
-    template_name = 'tasks/delete.html'
-    success_url = reverse_lazy('tasks_list')
-
-    ## Добавить проверку, если создатель текущий, то ок, иначе
-    # Задачу может удалить только её автор
+class LabelDeleteView(LoginRequiredMixin, DeleteView):
+    model = Label
+    template_name = 'labels/delete.html'
+    success_url = reverse_lazy('labels_list')
 
     def delete(self, request, *args, **kwargs):
+        logger.debug('Label status delete valid')
         messages.success(self.request, gettext('Статус успешно удален'))
         return super().delete(request, *args, **kwargs)
