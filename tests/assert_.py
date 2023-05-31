@@ -14,4 +14,4 @@ def redirect_to(response, url):
 
 
 def redirect_to_login(response):
-    return redirect_to(response, reverse('user_login'))
+    return redirect_to(response, reverse('login'))

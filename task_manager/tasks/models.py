@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from task_manager.statuses.models import Status
+from task_manager.labels.models import Label
 
 
 class Task(models.Model):
@@ -13,7 +14,7 @@ class Task(models.Model):
     executor = models.ForeignKey(User, on_delete=models.PROTECT, related_name='executed_tasks')
 
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
-    # label = models.ForeignKey(Label, on_delete=models.SET_DEFAULT, default=None)
+    label = models.ForeignKey(Label, on_delete=models.SET_DEFAULT, default=None)
     created_at = models.DateTimeField(default=timezone.now, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 
