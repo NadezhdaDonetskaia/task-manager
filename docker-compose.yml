@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  web:
+    image: python:3.11.2
+    build:
+      context: .
+    volumes:
+      - .:/app
+    network_mode: 'host'
+    command: bash -c "cd app
+                      && pip install poetry
+                      && poetry install
+                      && poetry run python manage.py runserver"
