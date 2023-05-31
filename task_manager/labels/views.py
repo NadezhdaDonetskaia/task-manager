@@ -45,6 +45,8 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'labels/delete.html'
     success_url = reverse_lazy('labels_list')
 
+    ## Добавить проверку, если есть связь с задачей, то удалить нельзя
+
     def delete(self, request, *args, **kwargs):
         logger.debug('Label status delete valid')
         messages.success(self.request, gettext('Статус успешно удален'))
