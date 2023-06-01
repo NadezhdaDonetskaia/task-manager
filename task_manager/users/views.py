@@ -1,7 +1,10 @@
+from typing import Any
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.models import User
@@ -55,8 +58,6 @@ class UserLogoutView(LogoutView):
         messages.success(self.request, gettext('Вы успешно вышли из системы!'))
         return response
 
-    def get_next_page(self):
-        return self.next_page
 
 
 class UserListView(ListView):
@@ -72,11 +73,30 @@ class UserDetailView(DetailView):
     fields = ['username', 'first_name', 'last_name']
 
 
-class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+
+class UserTestIdentification(UserPassesTestMixin):
     model = User
+    success_url = reverse_lazy('users_index')
+
+    def test_func(self):
+        text_err = ''
+        if self.request.user.pk != self.get_object().pk:
+            logger.debug('User not match')
+            self.raise_exception = False
+            messages.error(self.request, gettext('У вас нет прав для изменения другого пользователя.'))
+            return False
+        return True
+    
+    def handle_no_permission(self):
+        if not self.raise_exception:
+            return redirect(self.request.META['HTTP_REFERER'])
+        return super().handle_no_permission()
+    
+
+class UserUpdateView(LoginRequiredMixin, UserTestIdentification , UpdateView):
     fields = ['username', 'first_name', 'last_name']
     template_name = 'users/update.html'
-    success_url = reverse_lazy('users_index')
+    
 
 
     def form_valid(self, form):
@@ -84,30 +104,13 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         messages.success(self.request, gettext('Информация обновлена!'))
         return response
 
-    def form_invalid(self, form):
-        response = super().form_invalid(form)
-        messages.error(self.request, gettext('Ошибка обновления!'))
-        return response
 
 
-class UserDeleteView(UserPassesTestMixin, DeleteView):
-    model = User
+class UserDeleteView(LoginRequiredMixin, UserTestIdentification, DeleteView):
     template_name = 'users/delete.html'
-    success_url = reverse_lazy('users_index')
 
 
-    def test_func(self):
-        if self.request.user.pk != self.get_object().pk:
-            logger.debug('User not match')
-            self.raise_exception = False
-            messages.error(self.request, gettext("У вас нет прав для удаления этого профиля."))
-            return False
-        return True
 
-    def handle_no_permission(self):
-        if not self.raise_exception:
-            return redirect(self.request.META['HTTP_REFERER'])
-        return super().handle_no_permission()
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, gettext('Пользователь удален!'))
