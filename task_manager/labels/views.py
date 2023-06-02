@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect
 from django.utils.translation import gettext
-
+from django.db.models.deletion import ProtectedError
 from task_manager.logger_config import logger
 
 from task_manager.labels.models import Label
@@ -45,9 +45,14 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'labels/delete.html'
     success_url = reverse_lazy('labels_list')
 
-    ## Добавить проверку, если есть связь с задачей, то удалить нельзя
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs):        
         logger.debug('Label status delete valid')
-        messages.success(self.request, gettext('Статус успешно удален'))
-        return super().delete(request, *args, **kwargs)
+        ## НЕ РАБОТАЕТ -ВСЁ-РАВНО ВЫДАЁТ ОШИБКУ =(
+        try:
+            messages.success(self.request, gettext('Статус успешно удален'))
+            return super().delete(request, *args, **kwargs)
+        except ProtectedError as err:
+            messages.error(err.msg)
+            return redirect('tasks_list')
+

@@ -5,21 +5,37 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect
 from django.utils.translation import gettext
 
+from django_filters.views import FilterView
+
 from task_manager.logger_config import logger
 
 from task_manager.tasks.models import Task
+from task_manager.tasks.filters import TaskFilter
 
 
-class TasksListView(LoginRequiredMixin, ListView):
+class TasksListView(LoginRequiredMixin, FilterView):
     model = Task
     template_name = 'tasks/list.html'
     context_object_name = 'tasks'
+    filterset_class = TaskFilter
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     my_tasks = self.request.GET.get(author_id=self.request.user.id)
+    #     if my_tasks:
+    #         queryset = queryset.filter(author_id=self.request.user.id)
+    #     return queryset
+    
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['filter'] = self.get_filterset()  # Получить экземпляр TaskFilter
+    #     return context
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     template_name = 'tasks/create.html'
-    fields = ['name']
+    fields = ['name', 'executor', 'description', 'status', 'label']
     success_url = reverse_lazy('tasks_list')
 
     #
@@ -44,8 +60,7 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'tasks/delete.html'
     success_url = reverse_lazy('tasks_list')
 
-    ## Добавить проверку, если создатель текущий, то ок, иначе
-    # Задачу может удалить только её автор
+
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, gettext('Статус успешно удален'))

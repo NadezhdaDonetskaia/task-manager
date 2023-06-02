@@ -8,8 +8,8 @@
 
 {% block content %}
 <div class="container wrapper flex-grow-1">
-    <h1 class="my-4">{% translate 'Statuses' %}</h1>
-<a class="nav-link" href="{% url 'status_create' %}">{% translate 'Create status' %}</a>
+    <h1 class="my-4">{% translate 'Labels' %}</h1>
+<a class="nav-link" href="{% url 'label_create' %}">{% translate 'Create label' %}</a>
 <table class="table table-striped">
     <thead>
           <tr>
@@ -29,7 +29,7 @@
             {{ label.name }}
         </td>
         <td>
-            {{ user.created_at }}
+            {{ label.created_at }}
         </td>
          <td>
           <a href="{% url 'label_update' label.pk %}">

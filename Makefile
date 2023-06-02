@@ -14,6 +14,7 @@ make lint:
 	poetry run flake8 task_manager
 
 run_test:
-	poetry run pytest --no-summary --disable-pytest-warnings  
+	poetry run pytest --no-summary --disable-pytest-warnings
+
 run_report_test:
 	poetry run pytest --cov=task_manager tests/ --cov-report xml
