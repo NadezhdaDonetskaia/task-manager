@@ -3,7 +3,7 @@
 {% bootstrap_css %}
 {% load i18n %}
 {% block title %}
-  {% translate title %}
+{% translate title %}
 {% endblock %}
 
 {% block content %}
@@ -11,11 +11,25 @@
     <h1 class="my-4">{% translate 'tasks' %}</h1>
 <a class="nav-link" href="{% url 'task_create' %}">{% translate 'Create task' %}</a>
 
+<div class="container">
+    <form method="GET">
+        {% for field in filter.form %}        
+            {% if field.name == 'my_tasks'%}
+                <div class="form-check">
+                    {{ field. }}
+                    <input class="form-check-input" type="checkbox" id="{{ field.id_for_label }}" name="{{ field.name }}">
+                    <label class="form-check-label" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+              </div>
+            {% else %}
+                {% bootstrap_field field %}
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">{% translate 'Применить' %}</button>
+    </form>
+</div>
 
-<form method="GET">
-    {{ filter.form.as_p }}
-    <button type="submit" class="btn btn-primary">{% translate 'Применить' %}</button>
-</form>
 
 
 
@@ -63,7 +77,7 @@
           </a>
         </td>
      </tr>
-        {% endfor %}
+    {% endfor %}
 
   </tbody>
 </table>

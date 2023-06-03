@@ -11,12 +11,14 @@ from task_manager.logger_config import logger
 
 from task_manager.tasks.models import Task
 from task_manager.tasks.filters import TaskFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class TasksListView(LoginRequiredMixin, FilterView):
     model = Task
     template_name = 'tasks/list.html'
     context_object_name = 'tasks'
+    filter_backends = [DjangoFilterBackend]
     filterset_class = TaskFilter
 
     # def get_queryset(self):
@@ -47,7 +49,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
     template_name = 'tasks/update.html'
-    fields = ['name']
+    fields = ['name', 'description', 'status', 'executor', 'label']
     success_url = reverse_lazy('tasks_list')
 
     def form_valid(self, form):

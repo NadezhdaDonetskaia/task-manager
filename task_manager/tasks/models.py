@@ -22,7 +22,7 @@ class Task(models.Model):
 
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT,
                                default=None, related_name='authored_tasks')
-    executor = models.ForeignKey(User, on_delete=models.PROTECT, related_name='executed_tasks')
+    executor = models.ForeignKey(User, on_delete=models.PROTECT, related_name='executed_tasks', blank=True, null=True)
 
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
     label = models.ForeignKey(Label, on_delete=models.PROTECT)

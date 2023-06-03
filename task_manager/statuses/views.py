@@ -44,7 +44,6 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'statuses/delete.html'
     success_url = reverse_lazy('statuses_list')
 
-    # нельзя удалить, если есть привязка к задаче
 
     def delete(self, request, *args, **kwargs):
         logger.debug('Form status delete valid')
