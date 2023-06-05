@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% load i18n %}
+{% load getattr %}
+
+{% block title %}
+{% translate model_name %}
+{% endblock %}
+
+
+
+
+
+{% block content %}
+    <div class="container wrapper flex-grow-1">
+        <h1 class="my-4">{{ model_name }}</h1>
+            
+    <a class="nav-link" href="{% url create_url %}">Create  {{ model_name }}</a>
+
+{% if filter %}
+    <div class="container">
+
+        <form method="GET">
+            {% for field in filter.form %}        
+                {% if field.name == 'my_tasks'%}
+                    <div class="form-check">
+                        {{ field. }}
+                        <input class="form-check-input" type="checkbox" id="{{ field.id_for_label }}" name="{{ field.name }}">
+                        <label class="form-check-label" for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+                </div>
+                {% else %}
+                    {% bootstrap_field field %}
+                {% endif %}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">{% translate 'Применить' %}</button>
+        </form>
+    </div>
+{% endif %}
+
+    <table class="table table-striped">
+        
+        <thead>        
+            <tr>
+                {% for field in fields %}
+                    <th>
+                        {% translate field %}
+                    </th>
+                {% endfor %}
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for el in object_list %}
+                <tr>
+                    {% for field in fields %}
+                        <td>
+                            {{ el|getattr:field }}
+                        </td>
+                    {% endfor %}
+                    <td>
+                        <a href="{% url update_url el.pk %}">
+                            {% translate 'change' %}
+                        </a>
+                        <br>
+                        <a href="{% url delete_url el.pk %}">
+                            {% translate 'delete' %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+    </tbody>
+    </table>
+
+    </div>
+{% endblock %}

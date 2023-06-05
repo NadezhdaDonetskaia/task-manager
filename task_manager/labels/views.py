@@ -8,19 +8,31 @@ from django.db.models.deletion import ProtectedError
 from task_manager.logger_config import logger
 
 from task_manager.labels.models import Label
+from task_manager.labels.forms import LabelForm
 
 
-class LabelListView(LoginRequiredMixin, ListView):
+class LabelView:
     model = Label
-    template_name = 'labels/list.html'
-    context_object_name = 'labels'
+    form_class = LabelForm
+    success_url = reverse_lazy('label_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['fields'] = ['id', 'name', 'created_at']
+        context['model_name'] = self.model._meta.verbose_name
+        context['create_url'] = 'label_create'
+        context['update_url'] = 'label_update'
+        context['delete_url'] = 'label_delete'
+        context['list_url'] = 'labels_list'
+        return context
 
 
-class LabelCreateView(LoginRequiredMixin, CreateView):
-    model = Label
-    template_name = 'labels/create.html'
-    fields = ['name']
-    success_url = reverse_lazy('labels_list')
+class LabelListView(LabelView, LoginRequiredMixin, ListView):
+    template_name = 'list.html'
+
+
+class LabelCreateView(LabelView, LoginRequiredMixin, CreateView):
+    template_name = 'create.html'
 
     def form_valid(self, form):
         logger.debug('Label status crete valid')
@@ -28,11 +40,8 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class LabelUpdateView(LoginRequiredMixin, UpdateView):
-    model = Label
-    template_name = 'labels/update.html'
-    fields = ['name']
-    success_url = reverse_lazy('labels_list')
+class LabelUpdateView(LabelView, LoginRequiredMixin, UpdateView):
+    template_name = 'update.html'
 
     def form_valid(self, form):
         logger.debug('Label status update valid')
@@ -40,15 +49,12 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class LabelDeleteView(LoginRequiredMixin, DeleteView):
-    model = Label
-    template_name = 'labels/delete.html'
-    success_url = reverse_lazy('labels_list')
+class LabelDeleteView(LabelView, LoginRequiredMixin, DeleteView):
+    template_name = 'delete.html'
 
 
     def delete(self, request, *args, **kwargs):        
         logger.debug('Label status delete valid')
-        ## НЕ РАБОТАЕТ -ВСЁ-РАВНО ВЫДАЁТ ОШИБКУ =(
         try:
             messages.success(self.request, gettext('Статус успешно удален'))
             return super().delete(request, *args, **kwargs)
