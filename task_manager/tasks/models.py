@@ -24,8 +24,8 @@ class Task(models.Model):
                                default=None, related_name='authored_tasks')
     executor = models.ForeignKey(User, on_delete=models.PROTECT, related_name='executed_tasks', blank=True, null=True)
 
-    status = models.ForeignKey(Status, on_delete=models.PROTECT)
-    label = models.ForeignKey(Label, on_delete=models.PROTECT)
+    status = models.ForeignKey(Status, on_delete=models.PROTECT, blank=False)
+    label = models.ForeignKey(Label, on_delete=models.PROTECT, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 

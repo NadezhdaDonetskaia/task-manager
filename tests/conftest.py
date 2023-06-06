@@ -1,14 +1,17 @@
 from copy import copy
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 import pytest
 
+from task_manager.logger_config import logger
 
+USER_PASSWORD = 'test_password'
 USER_DATA = dict(
     username='test_user',
     first_name='Test',
-    last_name='Testov',
+    last_name='Testov'
 )
-USER_PASSWORD = 'test_password'
+
 
 
 @pytest.fixture
@@ -23,6 +26,7 @@ def create_object(model, input_data):
         input_data.update(kwargs)
         obj = model(**input_data)
         obj.save()
+        logger.error(f'Create obj {obj}')
         return obj
     return create
 
@@ -36,16 +40,20 @@ def created_object(create_object):
 def user():
     user_model = get_user_model()
     user_ = user_model.objects.create_user(USER_DATA)
+    user_.set_password(USER_PASSWORD)
     user_.save()
+    logger.error(f'Create user {user_.username}')
     return user_
 
 
 @pytest.fixture
 def logged_in_user(client, user):
-    client.login(
+    c = client.login(
         username=user.username,
         password=USER_PASSWORD
     )
+    logger.error(f'Login user {user.username}')
+    logger.error(c)
     return user
 
 

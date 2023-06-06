@@ -14,7 +14,7 @@ from task_manager.labels.forms import LabelForm
 class LabelView:
     model = Label
     form_class = LabelForm
-    success_url = reverse_lazy('label_list')
+    success_url = reverse_lazy('labels_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

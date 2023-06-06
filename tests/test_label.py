@@ -4,14 +4,15 @@ import pytest
 from task_manager.logger_config import logger
 from tests.assert_ import redirect_to_login
 
-CREATE_URL = reverse_lazy('task_create')
-UPDATE_URL = 'tasks/{id}/update'
-DELETE_URL = 'tasks/{id}/delete'
-INPUT_DATA = dict(name='task_test')
+CREATE_URL = reverse_lazy('label_create')
+UPDATE_URL = 'label/{id}/update'
+DELETE_URL = 'label/{id}/delete'
+INPUT_DATA = dict(name='label_test')
 
 
 @pytest.fixture
 def model():
+    logger.error(Label)
     return Label
 
 

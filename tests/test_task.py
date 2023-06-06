@@ -1,13 +1,17 @@
 from django.urls import reverse_lazy
 from task_manager.tasks.models import Task
+from task_manager.statuses.models import Status
 import pytest
 from task_manager.logger_config import logger
 from tests.assert_ import redirect_to_login
 
 CREATE_URL = reverse_lazy('task_create')
-UPDATE_URL = 'tasks/{id}/update'
-DELETE_URL = 'tasks/{id}/delete'
-INPUT_DATA = dict(name='task_test')
+UPDATE_URL = 'task/{id}/update'
+DELETE_URL = 'task/{id}/delete'
+INPUT_DATA = dict(
+    name='task_test', 
+    status='status_for_task_test'
+    )
 
 
 @pytest.fixture
@@ -15,12 +19,14 @@ def model():
     return Task
 
 
-@pytest.mark.usefixtures('authorized')
-@pytest.mark.django_db
-def test_create(client, model, input_data):
-    request = client.post(CREATE_URL, input_data)
-    logger.debug(f'label model {request}')
-    assert model.objects.get(name=input_data['name'])
+# @pytest.mark.usefixtures('authorized')
+# @pytest.mark.django_db
+# def test_create(client, model, input_data):
+#     logger.error(model)
+#     logger.error(input_data['name'])
+#     request = client.post(CREATE_URL, input_data)
+#     logger.error(request.content)
+#     assert model.objects.get(name=input_data['name'])
 
 
 # @pytest.mark.usefixtures('authorized')

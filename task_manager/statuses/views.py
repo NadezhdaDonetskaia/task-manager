@@ -13,7 +13,7 @@ from task_manager.statuses.forms import StatusForm
 class StatusView:
     model = Status
     form_class = StatusForm
-    success_url = reverse_lazy('status_list')
+    success_url = reverse_lazy('statuses_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
