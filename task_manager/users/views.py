@@ -22,9 +22,10 @@ class UserView:
     full_name = model.get_full_name
     model.full_name = full_name
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        logger.error(context)
+        # logger.error(context)
         context['fields'] = ['id', 'username', 'full_name', 'date_joined']
         context['model_name'] = self.model._meta.verbose_name
         context['create_url'] = 'user_create'
@@ -42,7 +43,7 @@ class UserRegistrationView(CreateView):
     def form_valid(self, form):
         logger.debug('Успешная регистрация')
         response = super().form_valid(form)
-        messages.success(self.request, gettext('Вы успешно зарегистрировались!'))
+        messages.success(self.request, gettext('Пользователь успешно зарегистрирован'))
         return response
 
     def form_invalid(self, form):
@@ -59,7 +60,9 @@ class UserLoginView(LoginView):
     def form_invalid(self, form):
         logger.error('Ошибка входа')
         response = super().form_invalid(form)
-        messages.error(self.request, gettext('Ошибка входа!'))
+        messages.error(self.request, 
+                       gettext('Пожалуйста, введите правильные имя пользователя и пароль.\
+                                Оба поля могут быть чувствительны к регистру.'))
         return response
 
     def form_valid(self, form):
@@ -96,7 +99,8 @@ class UserTestIdentification(UserView, UserPassesTestMixin):
         if self.request.user.pk != self.get_object().pk:
             logger.debug('User not match')
             self.raise_exception = False
-            messages.error(self.request, gettext('У вас нет прав для изменения другого пользователя.'))
+            messages.error(self.request,
+                           gettext('У вас нет прав для изменения другого пользователя.'))
             return False
         return True
     
@@ -113,7 +117,7 @@ class UserUpdateView(LoginRequiredMixin, UserTestIdentification , UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, gettext('Информация обновлена!'))
+        messages.success(self.request, gettext('Пользователь успешно изменен'))
         return response
 
 
@@ -122,5 +126,5 @@ class UserDeleteView(LoginRequiredMixin, UserTestIdentification, DeleteView):
     template_name = 'delete.html'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, gettext('Пользователь удален!'))
+        messages.success(self.request, gettext('Пользователь успешно удален'))
         return super().delete(request, *args, **kwargs)
