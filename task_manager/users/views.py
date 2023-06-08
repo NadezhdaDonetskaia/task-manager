@@ -19,10 +19,12 @@ from task_manager.logger_config import logger
 class UserView:
     model = User
     success_url = reverse_lazy('user_list')
+    full_name = model.get_full_name
+    model.full_name = full_name
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        self.model.full_name = self.model.get_full_name
+        logger.error(context)
         context['fields'] = ['id', 'username', 'full_name', 'date_joined']
         context['model_name'] = self.model._meta.verbose_name
         context['create_url'] = 'user_create'
