@@ -23,6 +23,7 @@ class UserView:
     model.full_name = full_name
 
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # logger.error(context)
@@ -68,7 +69,7 @@ class UserLoginView(LoginView):
     def form_valid(self, form):
         logger.debug("Успешный вход в систему")
         response = super().form_valid(form)
-        messages.success(self.request, gettext('Вы успешно вошли в систему!'))
+        messages.success(self.request, gettext('Вы залогинены'))
         return response
 
 
