@@ -23,11 +23,12 @@ def input_data(request):
 def create_object(model, input_data):
 
     def create(**kwargs):
+        logger.error(f'input-data={input_data}, kwargs={kwargs}')
         input_data.update(kwargs)
-        obj = model(**input_data)
-        obj.save()
-        logger.error(f'Create obj {obj}')
-        return obj
+        object_ = model(**input_data)
+        object_.save()
+        logger.error(f'Create obj {object_}')
+        return object_
     return create
 
 
@@ -53,7 +54,7 @@ def logged_in_user(client, user):
         password=USER_PASSWORD
     )
     logger.error(f'Login user {user.username}')
-    logger.error(c)
+    logger.error(f'clien login {c}')
     return user
 
 

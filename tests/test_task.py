@@ -8,10 +8,15 @@ from tests.assert_ import redirect_to_login
 CREATE_URL = reverse_lazy('task_create')
 UPDATE_URL = 'task/{id}/update'
 DELETE_URL = 'task/{id}/delete'
-INPUT_DATA = dict(
-    name='task_test', 
-    status='status_for_task_test'
-    )
+INPUT_DATA = dict(name='task_test')
+
+@pytest.fixture
+def create_input_data():
+    status=Status.objects.create(name='status_for_task')
+    status.save()
+    logger.error(f'status save? {status.id}')
+    return dict(name='task_test', status=status.id)
+
 
 
 @pytest.fixture
@@ -19,14 +24,23 @@ def model():
     return Task
 
 
+@pytest.mark.usefixtures('authorized')
+@pytest.mark.django_db
+def test_create(client, model, create_input_data):
+    request = client.post(CREATE_URL, create_input_data)
+    logger.error(f'status save? {Status.objects.all()}')
+    logger.error(request)
+    assert model.objects.get(name=create_input_data['name'])
+
+
 # @pytest.mark.usefixtures('authorized')
 # @pytest.mark.django_db
 # def test_create(client, model, input_data):
-#     logger.error(model)
-#     logger.error(input_data['name'])
 #     request = client.post(CREATE_URL, input_data)
-#     logger.error(request.content)
+#     logger.error(f'status save? {Status.objects.all()}')
+#     logger.error(f'input_data {input_data}')
 #     assert model.objects.get(name=input_data['name'])
+
 
 
 # @pytest.mark.usefixtures('authorized')
