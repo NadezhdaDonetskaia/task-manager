@@ -78,7 +78,7 @@ class UserLogoutView(LogoutView):
 
     def dispatch(self, request, *args, **kwargs):
         response = super().dispatch(request, *args, **kwargs)
-        messages.success(self.request, gettext('Вы успешно вышли из системы!'))
+        messages.success(self.request, gettext('Вы разлогинены'))
         return response
 
 
