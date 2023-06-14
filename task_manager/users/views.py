@@ -28,6 +28,12 @@ class UserView:
         context = super().get_context_data(**kwargs)
         # logger.error(context)
         context['fields'] = ['id', 'username', 'full_name', 'date_joined']
+        context['fields_name'] = [
+            'ID', 
+            gettext('Имя пользователя'), 
+            gettext('Полное имя'), 
+            gettext('Дата создания')
+            ]
         context['model_name'] = self.model._meta.verbose_name
         context['create_url'] = 'user_create'
         context['update_url'] = 'user_update'
