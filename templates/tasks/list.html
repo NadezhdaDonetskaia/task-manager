@@ -1,0 +1,29 @@
+{% extends "list.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% load i18n %}
+{% load getattr %}
+
+
+{% block filter %}
+    {% if filter %}
+        <div class="container">
+
+            <form method="GET">
+                {% for field in filter.form %}        
+                    {% if field.name == 'my_tasks'%}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="{{ field.id_for_label }}" name="{{ field.name }}">
+                            <label class="form-check-label" for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+                    </div>
+                    {% else %}
+                        {% bootstrap_field field %}
+                    {% endif %}
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">{% translate 'Применить' %}</button>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

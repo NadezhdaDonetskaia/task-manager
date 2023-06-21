@@ -1,16 +1,16 @@
 from typing import Any
 from django.contrib import messages
+
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import redirect
-from django.contrib.auth.models import User
 from django.template.response import TemplateResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext
 
-
+from task_manager.users.models import UserTask as User
 from task_manager.users.forms import UserRegistrationForm
 from task_manager.logger_config import logger
 
@@ -19,8 +19,6 @@ from task_manager.logger_config import logger
 class UserView:
     model = User
     success_url = reverse_lazy('user_list')
-    full_name = model.get_full_name
-    model.full_name = full_name
 
 
 
@@ -98,7 +96,7 @@ class UserDetailView(UserView, DetailView):
 
 
 
-class UserTestIdentification(UserView, UserPassesTestMixin):
+class UserTestIdentification(UserPassesTestMixin):
     success_url = reverse_lazy('users_index')
 
     def test_func(self):

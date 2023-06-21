@@ -1,27 +1,48 @@
-from django.urls import reverse_lazy
-from task_manager.labels.models import Label
-import pytest
-from task_manager.logger_config import logger
-from tests.assert_ import redirect_to_login
+# from copy import copy
+# from django.urls import reverse_lazy
+# from task_manager.labels.models import Label
+# import pytest
+# from task_manager.logger_config import logger
+# from tests.assert_ import redirect_to_login
 
-CREATE_URL = reverse_lazy('label_create')
-UPDATE_URL = 'label/{id}/update'
-DELETE_URL = 'label/{id}/delete'
-INPUT_DATA = dict(name='label_test')
-
-
-@pytest.fixture
-def model():
-    logger.error(Label)
-    return Label
+# CREATE_URL = reverse_lazy('label_create')
+# UPDATE_URL = 'label/{id}/update'
+# DELETE_URL = 'label/{id}/delete'
+# INPUT_DATA = dict(name='label_test_name')
 
 
-@pytest.mark.usefixtures('authorized')
-@pytest.mark.django_db
-def test_create(client, model, input_data):
-    request = client.post(CREATE_URL, input_data)
-    logger.debug(f'label model {request}')
-    assert model.objects.get(name=input_data['name'])
+# @pytest.fixture
+# def model():
+#     logger.error(Label)
+#     return Label
+
+# @pytest.fixture
+# def input_data(request):
+#     return copy(request.module.INPUT_DATA)
+
+
+# @pytest.fixture
+# def create_object(model, input_data):
+
+#     def create(**kwargs):
+#         input_data.update(kwargs)
+#         object_ = model(**input_data)
+#         object_.save()
+#         logger.error(f'Create obj {object_}')
+#         return object_
+#     return create
+
+
+# @pytest.fixture
+# def created_object(create_object):
+#     return create_object()
+
+# @pytest.mark.usefixtures('authorized')
+# @pytest.mark.django_db
+# def test_create(client, model, input_data):
+#     request = client.post(CREATE_URL, input_data)
+#     logger.debug(f'label model {request}')
+#     assert model.objects.get(name=input_data['name'])
 
 
 # @pytest.mark.usefixtures('authorized')

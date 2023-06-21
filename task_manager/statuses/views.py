@@ -18,6 +18,11 @@ class StatusView:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['fields'] = ['id', 'name', 'created_at']
+        context['fields_name'] = [
+            'ID', 
+            gettext('имя'),
+            gettext('дата создания')
+            ]
         context['model_name'] = self.model._meta.verbose_name
         context['create_url'] = 'status_create'
         context['update_url'] = 'status_update'

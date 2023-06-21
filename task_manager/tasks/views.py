@@ -22,6 +22,14 @@ class TaskView(View):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['fields_name'] = [
+            'ID', 
+            gettext('имя'), 
+            gettext('статус'), 
+            gettext('автор'), 
+            gettext('исполнитель'), 
+            gettext('дата создания')
+            ]
         context['fields'] = ['id', 'name', 'status', 'author', 'executor', 'created_at']
         context['model_name'] = self.model._meta.verbose_name
         context['create_url'] = 'task_create'
