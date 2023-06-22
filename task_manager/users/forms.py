@@ -5,10 +5,7 @@ from task_manager.users.models import UserTask as User
 
 
 class UserRegistrationForm(UserCreationForm):
-    password2 = forms.CharField(
-        label=gettext('Повторите пароль'),
-        widget=forms.PasswordInput,
-    )
+
 
     class Meta:
         model = User
