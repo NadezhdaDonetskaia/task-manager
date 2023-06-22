@@ -10,8 +10,8 @@
     <form method="post">
       {% csrf_token %}
       {% bootstrap_form form %}
-      <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
-      <a href="{% url 'user_show' user.id %}" class="btn btn-secondary">{% trans 'Cancel' %}</a>
+      <button type="submit" class="btn btn-primary">{% trans 'Изменить' %}</button>
+      <a href="{% url 'user_show' user.id %}" class="btn btn-secondary">{% trans 'Отмена' %}</a>
     </form>
   </div>
 {% endblock %}
