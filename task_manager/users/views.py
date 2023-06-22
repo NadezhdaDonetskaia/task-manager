@@ -16,34 +16,13 @@ from task_manager.logger_config import logger
 
 
 
-class UserView:
-    model = User
-    success_url = reverse_lazy('user_list')
-
-
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # logger.error(context)
-        context['fields'] = ['id', 'username', 'full_name', 'date_joined']
-        context['fields_name'] = [
-            'ID', 
-            gettext('Имя пользователя'), 
-            gettext('Полное имя'), 
-            gettext('Дата создания')
-            ]
-        context['model_name'] = self.model._meta.verbose_name
-        context['create_url'] = 'user_create'
-        context['update_url'] = 'user_update'
-        context['delete_url'] = 'user_delete'
-        context['list_url'] = 'users_list'
-        return context
-
 
 class UserRegistrationView(CreateView):
+    model = User
+    success_url = reverse_lazy('users_list')
     form_class = UserRegistrationForm
     success_url = reverse_lazy('login')
-    template_name = 'create.html'
+    template_name = 'users/create.html'
 
     def form_valid(self, form):
         logger.debug('Успешная регистрация')
@@ -59,6 +38,7 @@ class UserRegistrationView(CreateView):
 
 
 class UserLoginView(LoginView):
+    model = User
     template_name = 'users/login.html'
     success_url = reverse_lazy('home')
 
@@ -87,17 +67,24 @@ class UserLogoutView(LogoutView):
 
 
 
-class UserListView(UserView, ListView):
-    template_name = 'list.html'
+class UserListView(ListView):
+    model = User
+    template_name = 'users/index.html'
+    context_object_name = 'users'
+    fields = ['username', 'first_name', 'last_name']
 
 
-class UserDetailView(UserView, DetailView):
+class UserDetailView(DetailView):
+    model = User
     template_name = 'users/show.html'
+    context_object_name = 'user'
+    fields = ['username', 'first_name', 'last_name']
 
 
 
 class UserTestIdentification(UserPassesTestMixin):
-    success_url = reverse_lazy('users_index')
+    # model = User
+    # success_url = reverse_lazy('users_list')
 
     def test_func(self):
         text_err = ''
@@ -116,7 +103,10 @@ class UserTestIdentification(UserPassesTestMixin):
     
 
 class UserUpdateView(LoginRequiredMixin, UserTestIdentification , UpdateView):
-    template_name = 'update.html'
+    model = User
+    success_url = reverse_lazy('users_list')
+    fields = ['username', 'first_name', 'last_name']
+    template_name = 'users/update.html'
     
 
 
@@ -128,7 +118,9 @@ class UserUpdateView(LoginRequiredMixin, UserTestIdentification , UpdateView):
 
 
 class UserDeleteView(LoginRequiredMixin, UserTestIdentification, DeleteView):
-    template_name = 'delete.html'
+    model = User
+    success_url = reverse_lazy('users_list')
+    template_name = 'users/delete.html'
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, gettext('Пользователь успешно удален'))

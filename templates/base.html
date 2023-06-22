@@ -17,14 +17,14 @@
 
 <body class="d-flex flex-column min-vh-100">
   <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
-      <a class="navbar-brand" href="/">{% translate "Менеджер задач" %}</a>
+      <a class="navbar-brand" href="/">{% translate "Task Manager" %}</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarToggleExternalContent">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarToggleExternalContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'users_list' %}">{% translate "Пользователи" %}</a>
+            <a class="nav-link" href="{% url 'users_list' %}">{% translate "Users" %}</a>
           </li>
           {% if user.is_authenticated %}
             <li class="nav-item">
@@ -42,14 +42,14 @@
         <ul class="navbar-nav">
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}">{% translate "Выход" %}</a>
+              <a class="nav-link" href="{% url 'logout' %}">{% translate "Logout" %}</a>
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">{% translate "Вход" %}</a>
+              <a class="nav-link" href="{% url 'login' %}">{% translate "Login" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'user_create' %}">{% translate "Регистрация" %}</a>
+              <a class="nav-link" href="{% url 'user_create' %}">{% translate "Registration" %}</a>
             </li>
             {% endif %}
         </ul>

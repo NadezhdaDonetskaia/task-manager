@@ -4,13 +4,13 @@
 {% load i18n %}
 
 {% block title %}
-  {% trans title %}
+  {% translate title %}
 {% endblock %}
 
 
 {% block content %}
 <div class="container">
-  <h1>{% trans 'Create ' %} {% trans model_name %}</h1>
+  <h1>{% trans "Update status" %}</h1>
   <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}

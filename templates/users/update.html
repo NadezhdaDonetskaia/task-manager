@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% load i18n %}
+
+
+{% block content %}
+  <div class="container">
+    <h1>{% trans 'Update Profile' %}</h1>
+    <form method="post">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+      <a href="{% url 'user_show' user.id %}" class="btn btn-secondary">{% trans 'Cancel' %}</a>
+    </form>
+  </div>
+{% endblock %}

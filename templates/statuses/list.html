@@ -8,39 +8,35 @@
 
 {% block content %}
 <div class="container wrapper flex-grow-1">
-    <h1 class="my-4">{% translate 'Users' %}</h1>
-
+    <h1 class="my-4">{% translate 'Statuses' %}</h1>
+<a class="nav-link" href="{% url 'status_create' %}">{% translate 'Create status' %}</a>
 <table class="table table-striped">
     <thead>
           <tr>
-            <th>ID</th>
-            <th>{% translate 'User name' %}</th>
-            <th>{% translate 'Full name' %}</th>
+            <th>id</th>
+            <th>{% translate 'Name' %}</th>
             <th>{% translate 'Created' %}</th>
             <th></th>
           </tr>
     </thead>
     <tbody>
-    {% for user in users %}
+    {% for status in statuses %}
      <tr>
         <td>
-            {{ user.id }}
+            {{ status.id }}
         </td>
         <td>
-            <a class="nav-link" href="{% url 'user_show' user.pk %}">{{ user.username }}</a>
+            {{ status.name }}
         </td>
         <td>
-            {{ user.first_name }} {{user.last_name }}
-        </td>
-        <td>
-            {{ user.date_joined }}
+            {{ user.created_at }}
         </td>
          <td>
-          <a href="{% url 'user_update' user.pk %}">
+          <a href="{% url 'status_update' status.pk %}">
               {% translate 'change' %}
           </a>
           <br>
-          <a href="{% url 'user_delete' user.pk %}">
+          <a href="{% url 'status_delete' status.pk %}">
               {% translate 'delete' %}
           </a>
         </td>
