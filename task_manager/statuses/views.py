@@ -10,31 +10,18 @@ from task_manager.statuses.models import Status
 from task_manager.statuses.forms import StatusForm
 
 
-class StatusView:
+
+class StatusListView(LoginRequiredMixin, ListView):
     model = Status
-    form_class = StatusForm
+    template_name = 'statuses/list.html'
+    context_object_name = 'statuses'
+
+
+class StatusCreateView(LoginRequiredMixin, CreateView):
+    model = Status
+    template_name = 'statuses/create.html'
+    fields = ['name']
     success_url = reverse_lazy('statuses_list')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['fields'] = ['id', 'name', 'created_at']
-        context['fields_name'] = [
-            'ID', 
-            gettext('имя'),
-            gettext('дата создания')
-            ]
-        context['model_name'] = self.model._meta.verbose_name
-        context['create_url'] = 'status_create'
-        context['update_url'] = 'status_update'
-        context['delete_url'] = 'status_delete'
-        context['list_url'] = 'statuses_list'
-        return context
-
-class StatusListView(StatusView, LoginRequiredMixin, ListView):
-    template_name = 'list.html'
-
-class StatusCreateView(StatusView, LoginRequiredMixin, CreateView):
-    template_name = 'create.html'
 
     def form_valid(self, form):
         logger.debug('Form status create valid')
@@ -42,8 +29,11 @@ class StatusCreateView(StatusView, LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class StatusUpdateView(StatusView, LoginRequiredMixin, UpdateView):
-    template_name = 'update.html'
+class StatusUpdateView(LoginRequiredMixin, UpdateView):
+    model = Status
+    template_name = 'statuses/update.html'
+    fields = ['name']
+    success_url = reverse_lazy('statuses_list')
 
     def form_valid(self, form):
         logger.debug('Form status update valid')
@@ -51,8 +41,10 @@ class StatusUpdateView(StatusView, LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class StatusDeleteView(StatusView, LoginRequiredMixin, DeleteView):
-    template_name = 'delete.html'
+class StatusDeleteView(LoginRequiredMixin, DeleteView):
+    model = Status
+    template_name = 'statuses/delete.html'
+    success_url = reverse_lazy('statuses_list')
 
 
     def delete(self, request, *args, **kwargs):
