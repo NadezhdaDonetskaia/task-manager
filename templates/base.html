@@ -42,11 +42,11 @@
         <ul class="navbar-nav">
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}">{% translate "Logout" %}</a>
+              <a class="nav-link" href="{% url 'logout' %}">{% translate "Выход" %}</a>
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">{% translate "Login" %}</a>
+              <a class="nav-link" href="{% url 'login' %}">{% translate "Вход" %}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'user_create' %}">{% translate "Registration" %}</a>
