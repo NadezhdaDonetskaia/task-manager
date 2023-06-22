@@ -83,8 +83,6 @@ class UserDetailView(DetailView):
 
 
 class UserTestIdentification(UserPassesTestMixin):
-    # model = User
-    # success_url = reverse_lazy('users_list')
 
     def test_func(self):
         text_err = ''

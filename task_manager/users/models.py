@@ -9,3 +9,4 @@ class UserTask(User):
     @property
     def full_name(self):
         return self.get_full_name()
+    
