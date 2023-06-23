@@ -1,6 +1,8 @@
 from typing import Any
 from django.contrib import messages
 
+from django.contrib.auth.models import User
+
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.handlers.wsgi import WSGIRequest
@@ -10,7 +12,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext
 
-from task_manager.users.models import UserTask as User
+# from task_manager.users.models import UserTask as User
 from task_manager.users.forms import UserRegistrationForm
 from task_manager.logger_config import logger
 
@@ -103,7 +105,7 @@ class UserTestIdentification(UserPassesTestMixin):
 class UserUpdateView(LoginRequiredMixin, UserTestIdentification , UpdateView):
     model = User
     success_url = reverse_lazy('users_list')
-    fields = ['username', 'first_name', 'last_name', 'password']
+    fields = ['username', 'first_name', 'last_name']
     template_name = 'users/update.html'
     
 

@@ -1,7 +1,8 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.models import User
+
+from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.utils.translation import gettext
-from task_manager.users.models import UserTask as User
 
 
 class UserRegistrationForm(UserCreationForm):
