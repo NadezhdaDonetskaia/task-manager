@@ -12,8 +12,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext
 
-# from task_manager.users.models import UserTask as User
-from task_manager.users.forms import UserRegistrationForm
+
+from task_manager.users.forms import UserRegistrationForm, UserUpdateForm
 from task_manager.logger_config import logger
 
 
@@ -104,8 +104,9 @@ class UserTestIdentification(UserPassesTestMixin):
 
 class UserUpdateView(LoginRequiredMixin, UserTestIdentification , UpdateView):
     model = User
+    form_class = UserUpdateForm
     success_url = reverse_lazy('users_list')
-    fields = ['username', 'first_name', 'last_name']
+    # fields = ['username', 'first_name', 'last_name']
     template_name = 'users/update.html'
     
 
