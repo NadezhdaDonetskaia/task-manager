@@ -36,10 +36,10 @@ cp .env_example .env
 ```
 docker-compose up
 ```
-7. Wait for the containers to be built and the application to start. You can access Task Manager in your browser at http://localhost:8080.
+7. Wait for the containers to be built and the application to start. You can access Task Manager in your browser at http://localhost:8000.
 
 ## Usage
-1. Open your web browser and navigate to http://localhost:8080.
+1. Open your web browser and navigate to http://localhost:8000.
 2. Register a new account by providing the required information.
 3. Log in with your credentials.
 4. Start creating tasks by clicking on the "New Task" button.

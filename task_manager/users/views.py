@@ -103,7 +103,7 @@ class UserTestIdentification(UserPassesTestMixin):
 class UserUpdateView(LoginRequiredMixin, UserTestIdentification , UpdateView):
     model = User
     success_url = reverse_lazy('users_list')
-    fields = ['username', 'first_name', 'last_name']
+    fields = ['username', 'first_name', 'last_name', 'password']
     template_name = 'users/update.html'
     
 
