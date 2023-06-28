@@ -87,7 +87,6 @@ class UserDetailView(DetailView):
 class UserTestIdentification(UserPassesTestMixin):
 
     def test_func(self):
-        text_err = ''
         if self.request.user.pk != self.get_object().pk:
             logger.debug('User not match')
             self.raise_exception = False
@@ -122,6 +121,6 @@ class UserDeleteView(LoginRequiredMixin, UserTestIdentification, DeleteView):
     success_url = reverse_lazy('users_list')
     template_name = 'users/delete.html'
 
-    def delete(self, request, *args, **kwargs):
+    def form_valid(self, form):
         messages.success(self.request, gettext('Пользователь успешно удален'))
-        return super().delete(request, *args, **kwargs)
+        return super().form_valid(form)
