@@ -8,14 +8,14 @@
 
 {% block content %}
 <div class="container wrapper flex-grow-1">
-    <h1 class="my-4">{% translate 'Statuses' %}</h1>
+    <h1 class="my-4">{% translate 'Статусы' %}</h1>
 <a class="nav-link" href="{% url 'status_create' %}">{% translate 'Создать статус' %}</a>
 <table class="table table-striped">
     <thead>
           <tr>
             <th>id</th>
-            <th>{% translate 'Name' %}</th>
-            <th>{% translate 'Created' %}</th>
+            <th>{% translate 'Имя' %}</th>
+            <th>{% translate 'Дата создания' %}</th>
             <th></th>
           </tr>
     </thead>
