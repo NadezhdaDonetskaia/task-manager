@@ -18,7 +18,7 @@ from task_manager.logger_config import logger
 
 
 class Task(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, verbose_name='Имя')
     description = models.TextField(blank=True)
 
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT,
