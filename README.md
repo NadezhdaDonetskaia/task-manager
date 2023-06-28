@@ -34,7 +34,7 @@ cp .env_example .env
 6. Build and run the Docker containers:
 
 ```
-docker-compose up
+UID="$(id -u)" GID="$(id -g)" docker-compose up
 ```
 7. Wait for the containers to be built and the application to start. You can access Task Manager in your browser at http://localhost:8000.
 
