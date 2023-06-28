@@ -19,7 +19,7 @@
             <p class="card-text">
               {% trans "Вы действительно хотите удалить пользователя" %} "{{ user }}"?
             </p>
-            <button type="submit" class="btn btn-danger">{% trans "Удалить" %}</button>
+            <button type="submit" class="btn btn-danger">{% trans "Да, удалить" %}</button>
             <a href="{% url 'user_show' user.pk %}" class="btn btn-secondary">{% trans "Отмена" %}</a>
           </form>
         </div>
