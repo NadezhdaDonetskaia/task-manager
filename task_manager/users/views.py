@@ -106,7 +106,6 @@ class UserUpdateView(LoginRequiredMixin, UserTestIdentification , UpdateView):
     model = User
     form_class = UserUpdateForm
     success_url = reverse_lazy('users_list')
-    # fields = ['username', 'first_name', 'last_name']
     template_name = 'users/update.html'
     
 
