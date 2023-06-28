@@ -20,7 +20,7 @@ class StatusListView(LoginRequiredMixin, ListView):
 class StatusCreateView(LoginRequiredMixin, CreateView):
     model = Status
     template_name = 'statuses/create.html'
-    fields = ['name']
+    form = StatusForm
     success_url = reverse_lazy('statuses_list')
 
     def form_valid(self, form):
@@ -32,7 +32,7 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
 class StatusUpdateView(LoginRequiredMixin, UpdateView):
     model = Status
     template_name = 'statuses/update.html'
-    fields = ['name']
+    form = StatusForm
     success_url = reverse_lazy('statuses_list')
 
     def form_valid(self, form):
