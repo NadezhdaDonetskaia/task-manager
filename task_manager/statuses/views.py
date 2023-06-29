@@ -20,7 +20,8 @@ class StatusListView(LoginRequiredMixin, ListView):
 class StatusCreateView(LoginRequiredMixin, CreateView):
     model = Status
     template_name = 'statuses/create.html'
-    form = StatusForm
+    # form = StatusForm
+    fields = ['name']
     success_url = reverse_lazy('statuses_list')
 
     def form_valid(self, form):
@@ -32,7 +33,8 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
 class StatusUpdateView(LoginRequiredMixin, UpdateView):
     model = Status
     template_name = 'statuses/update.html'
-    form = StatusForm
+    # form = StatusForm
+    fields = ['name']
     success_url = reverse_lazy('statuses_list')
 
     def form_valid(self, form):
@@ -47,7 +49,6 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('statuses_list')
 
 
-    def delete(self, request, *args, **kwargs):
-        logger.debug('Form status delete valid')
+    def form_valid(self, form):
         messages.success(self.request, gettext('Статус успешно удален'))
-        return super().delete(request, *args, **kwargs)
+        return super().form_valid(form)

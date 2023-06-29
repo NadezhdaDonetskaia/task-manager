@@ -21,6 +21,7 @@ class LabelListView(LoginRequiredMixin, ListView):
 class LabelCreateView(LoginRequiredMixin, CreateView):
     model = Label
     template_name = 'labels/create.html'
+    # form = LabelForm
     fields = ['name']
     success_url = reverse_lazy('labels_list')
 
@@ -33,6 +34,7 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
 class LabelUpdateView(LoginRequiredMixin, UpdateView):
     model = Label
     template_name = 'labels/update.html'
+    # form = LabelForm
     fields = ['name']
     success_url = reverse_lazy('labels_list')
 
@@ -48,12 +50,7 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('labels_list')
 
 
-    def delete(self, request, *args, **kwargs):        
-        logger.debug('Label status delete valid')
-        try:
-            messages.success(self.request, gettext('Статус успешно удален'))
-            return super().delete(request, *args, **kwargs)
-        except ProtectedError as err:
-            messages.error(err.msg)
-            return redirect('tasks_list')
+    def form_valid(self, form):
+        messages.success(self.request, gettext('Метка успешно удалена'))
+        return super().form_valid(form)
 

@@ -21,7 +21,6 @@ from task_manager.logger_config import logger
 
 class UserRegistrationView(CreateView):
     model = User
-    success_url = reverse_lazy('users_list')
     form_class = UserRegistrationForm
     success_url = reverse_lazy('login')
     template_name = 'users/create.html'
