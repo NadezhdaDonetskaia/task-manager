@@ -29,7 +29,7 @@ class Task(models.Model):
     status = models.ForeignKey(Status, on_delete=models.PROTECT, blank=False, 
                                verbose_name='Статус')
     label = models.ForeignKey(Label, on_delete=models.PROTECT, blank=True, null=True, 
-                              verbose_name='Метка')
+                              verbose_name='Метки')
     created_at = models.DateTimeField(default=timezone.now, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 
