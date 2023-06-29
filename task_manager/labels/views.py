@@ -25,7 +25,6 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         logger.debug('Label status crete valid')
-        form.instance.author = self.request.user
         messages.success(self.request, gettext('Метка успешно создана'))
         return super().form_valid(form)
 

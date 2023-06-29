@@ -24,7 +24,6 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         logger.debug('Form status create valid')
-        form.instance.author = self.request.user
         messages.success(self.request, gettext('Статус успешно создан'))
         return super().form_valid(form)
 
