@@ -38,9 +38,10 @@
           <tr>
             <th>id</th>
             <th>{% translate 'Имя' %}</th>
-              <th>{% translate 'Статус' %}</th>
-              <th>{% translate 'Автор' %}</th>
-              <th>{% translate 'Исполнитель' %}</th>
+            <th>{% translate 'Описание' %}</th>
+            <th>{% translate 'Статус' %}</th>
+            <th>{% translate 'Автор' %}</th>
+            <th>{% translate 'Исполнитель' %}</th>
             <th>{% translate 'Дата создания' %}</th>
             <th></th>
           </tr>
@@ -52,8 +53,10 @@
             {{ task.id }}
         </td>
         <td>
-              {{ task.name }}
-          </a>
+            {{ task.name }}          
+        </td>
+        <td>
+            {{ task.description }}          
         </td>
         <td>
             {{ task.status }}
