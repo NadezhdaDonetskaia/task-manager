@@ -11,7 +11,7 @@ class TaskFilter(FilterSet, AllValuesFilter):
     status = ModelChoiceFilter(field_name='status', queryset=Status.objects.all(), label='Status')
     executor = ModelChoiceFilter(field_name='executor', queryset=User.objects.all(), label='Executor')
     label = ModelChoiceFilter(field_name='label', queryset=Label.objects.all(), label='Label')
-    my_tasks = BooleanFilter(field_name='my_tasks', method='filter_my_tasks', label='Only my tasks', widget=forms.CheckboxInput())
+    my_tasks = BooleanFilter(field_name='my_tasks', method='filter_my_tasks', label='Только свои задачи', widget=forms.CheckboxInput())
 
 
     class Meta:
