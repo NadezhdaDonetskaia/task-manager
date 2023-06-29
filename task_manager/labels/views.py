@@ -19,10 +19,8 @@ class LabelListView(LoginRequiredMixin, ListView):
 
 
 class LabelCreateView(LoginRequiredMixin, CreateView):
-    model = Label
     template_name = 'labels/create.html'
-    # form = LabelForm
-    fields = ['name']
+    form_class = LabelForm
     success_url = reverse_lazy('labels_list')
 
     def form_valid(self, form):
@@ -35,8 +33,7 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
 class LabelUpdateView(LoginRequiredMixin, UpdateView):
     model = Label
     template_name = 'labels/update.html'
-    # form = LabelForm
-    fields = ['name']
+    form_class = LabelForm
     success_url = reverse_lazy('labels_list')
 
     def form_valid(self, form):

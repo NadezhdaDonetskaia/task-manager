@@ -26,10 +26,8 @@ class TasksListView(LoginRequiredMixin, FilterView):
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
-    model = Task
     template_name = 'tasks/create.html'
-    # form = TaskForm
-    fields = ['name', 'description', 'status', 'executor', 'label']
+    form_class = StatusForm = TaskForm
     success_url = reverse_lazy('tasks_list')
 
     
@@ -42,8 +40,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
     template_name = 'tasks/update.html'
-    # form = TaskForm
-    fields = ['name', 'description', 'status', 'executor', 'label']
+    form_class = StatusForm = TaskForm
     success_url = reverse_lazy('tasks_list')
 
     def form_valid(self, form):
@@ -55,7 +52,6 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     template_name = 'tasks/delete.html'
     success_url = reverse_lazy('tasks_list')
-
 
 
     def form_valid(self, form):
