@@ -40,7 +40,7 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         logger.debug('Form status update valid')
-        messages.success(self.request, gettext('Статус успешно изменён'))
+        messages.success(self.request, gettext('Статус успешно изменен'))
         return super().form_valid(form)
 
 
