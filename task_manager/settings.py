@@ -105,6 +105,8 @@ LOGIN_URL = 'login'
 
 LOGIN_REDIRECT_URL = 'home'
 
+AUTH_USER_MODEL = 'users.User'
+
 BOOTSTRAP4 = {
 
     # The complete URL to the Bootstrap CSS file

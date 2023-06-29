@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 from django.db import models
 from django.db.models.signals import pre_delete
@@ -9,6 +9,7 @@ from django.utils.translation import gettext
 
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
+from task_manager.users.models import User
 
 from task_manager.logger_config import logger
 
@@ -20,8 +21,7 @@ class Task(models.Model):
     description = models.TextField(blank=True, verbose_name='Описание')
 
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT,
-                               default=None, related_name='authored_tasks', 
-                               verbose_name='Автор')
+                               default=None, verbose_name='Автор')
     executor = models.ForeignKey(User, on_delete=models.PROTECT, 
                                  related_name='executed_tasks', blank=True, null=True, 
                                  verbose_name='Исполнитель')

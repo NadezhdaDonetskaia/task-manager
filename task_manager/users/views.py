@@ -1,7 +1,7 @@
 from typing import Any
 from django.contrib import messages
 
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
@@ -12,7 +12,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext
 
-
+from task_manager.users.models import User
 from task_manager.users.forms import UserRegistrationForm, UserUpdateForm
 from task_manager.logger_config import logger
 
