@@ -9,7 +9,7 @@
 {% block content %}
 <div class="container wrapper flex-grow-1">
     <h1 class="my-4">{% translate 'tasks' %}</h1>
-<a class="nav-link" href="{% url 'task_create' %}">{% translate 'Create task' %}</a>
+<a class="nav-link" href="{% url 'task_create' %}">{% translate 'Создать задачу' %}</a>
 
 <div class="container">
     <form method="GET">
@@ -37,11 +37,11 @@
     <thead>
           <tr>
             <th>id</th>
-            <th>{% translate 'Name' %}</th>
-              <th>{% translate 'Status' %}</th>
-              <th>{% translate 'Autor' %}</th>
-              <th>{% translate 'Executor' %}</th>
-            <th>{% translate 'Created' %}</th>
+            <th>{% translate 'Имя' %}</th>
+              <th>{% translate 'Статус' %}</th>
+              <th>{% translate 'Автор' %}</th>
+              <th>{% translate 'Исполнитель' %}</th>
+            <th>{% translate 'Дата создания' %}</th>
             <th></th>
           </tr>
     </thead>
@@ -69,11 +69,11 @@
         </td>
          <td>
           <a href="{% url 'task_update' task.pk %}">
-              {% translate 'change' %}
+              {% translate 'Изменить' %}
           </a>
           <br>
           <a href="{% url 'task_delete' task.pk %}">
-              {% translate 'delete' %}
+              {% translate 'Удалить' %}
           </a>
         </td>
      </tr>
