@@ -19,14 +19,19 @@ from task_manager.logger_config import logger
 
 class Task(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='Имя')
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, verbose_name='Описание')
 
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT,
-                               default=None, related_name='authored_tasks')
-    executor = models.ForeignKey(User, on_delete=models.PROTECT, related_name='executed_tasks', blank=True, null=True)
+                               default=None, related_name='authored_tasks', 
+                               verbose_name='Автор')
+    executor = models.ForeignKey(User, on_delete=models.PROTECT, 
+                                 related_name='executed_tasks', blank=True, null=True, 
+                                 verbose_name='Исполнитель')
 
-    status = models.ForeignKey(Status, on_delete=models.PROTECT, blank=False)
-    label = models.ForeignKey(Label, on_delete=models.PROTECT, blank=True, null=True)
+    status = models.ForeignKey(Status, on_delete=models.PROTECT, blank=False, 
+                               verbose_name='Статус')
+    label = models.ForeignKey(Label, on_delete=models.PROTECT, blank=True, null=True, 
+                              verbose_name='Метка')
     created_at = models.DateTimeField(default=timezone.now, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 
