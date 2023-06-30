@@ -22,6 +22,6 @@ class TaskFilter(FilterSet, AllValuesFilter):
         if value:
             logger.error(f'User_current id={self.request.user.id}')
             logger.error(queryset.filter(executor_id=self.request.user.id))
-            return queryset.filter(executor=self.request.user)
+            return queryset.filter(author=self.request.user)
         return queryset
 
