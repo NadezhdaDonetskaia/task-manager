@@ -57,6 +57,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+
+    'task_manager.logger_middleware.LoggerMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -104,6 +106,8 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'users.User'
+
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS')
 
 BOOTSTRAP4 = {
 
