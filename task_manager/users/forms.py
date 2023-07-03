@@ -7,11 +7,9 @@ from django.utils.translation import gettext
 
 class UserRegistrationForm(UserCreationForm):
 
-
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'password1', 'password2')
-
 
 
 class UserUpdateForm(forms.ModelForm):

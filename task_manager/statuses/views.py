@@ -10,7 +10,6 @@ from task_manager.statuses.models import Status
 from task_manager.statuses.forms import StatusForm
 
 
-
 class StatusListView(LoginRequiredMixin, ListView):
     model = Status
     template_name = 'statuses/list.html'
@@ -44,7 +43,6 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
     model = Status
     template_name = 'statuses/delete.html'
     success_url = reverse_lazy('statuses_list')
-
 
     def form_valid(self, form):
         messages.success(self.request, gettext('Статус успешно удален'))

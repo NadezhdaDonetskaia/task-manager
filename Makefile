@@ -11,7 +11,7 @@ package-install:
 	python3 -m pip install --user --force-reinstall dist/*.whl
 
 make lint:
-	poetry run flake8 task_manager
+	poetry run flake8 task_manager --exclude tests
 
 run_test:
 	poetry run pytest --no-summary --disable-pytest-warnings

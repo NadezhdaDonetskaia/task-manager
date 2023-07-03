@@ -2,14 +2,11 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.shortcuts import redirect
 from django.utils.translation import gettext
-from django.db.models.deletion import ProtectedError
 from task_manager.logger_config import logger
 
 from task_manager.labels.models import Label
 from task_manager.labels.forms import LabelForm
-
 
 
 class LabelListView(LoginRequiredMixin, ListView):
@@ -46,8 +43,6 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'labels/delete.html'
     success_url = reverse_lazy('labels_list')
 
-
     def form_valid(self, form):
         messages.success(self.request, gettext('Метка успешно удалена'))
         return super().form_valid(form)
-

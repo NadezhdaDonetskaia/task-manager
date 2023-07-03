@@ -1,22 +1,17 @@
-from typing import Any
 from django.contrib import messages
 
 # from django.contrib.auth.models import User
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import redirect
-from django.template.response import TemplateResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.utils.translation import gettext
 
 from task_manager.users.models import User
 from task_manager.users.forms import UserRegistrationForm, UserUpdateForm
 from task_manager.logger_config import logger
-
-
 
 
 class UserRegistrationView(CreateView):
@@ -46,7 +41,7 @@ class UserLoginView(LoginView):
     def form_invalid(self, form):
         logger.error('Ошибка входа')
         response = super().form_invalid(form)
-        messages.error(self.request, 
+        messages.error(self.request,
                        gettext('Пожалуйста, введите правильные имя пользователя и пароль.\
                                 Оба поля могут быть чувствительны к регистру.'))
         return response
@@ -67,7 +62,6 @@ class UserLogoutView(LogoutView):
         return response
 
 
-
 class UserListView(ListView):
     model = User
     template_name = 'users/index.html'
@@ -82,7 +76,6 @@ class UserDetailView(DetailView):
     fields = ['username', 'first_name', 'last_name']
 
 
-
 class UserTestIdentification(UserPassesTestMixin):
 
     def test_func(self):
@@ -93,26 +86,23 @@ class UserTestIdentification(UserPassesTestMixin):
                            gettext('У вас нет прав для изменения другого пользователя.'))
             return False
         return True
-    
+
     def handle_no_permission(self):
         if not self.raise_exception:
             return redirect(self.request.META['HTTP_REFERER'])
         return super().handle_no_permission()
-    
 
-class UserUpdateView(LoginRequiredMixin, UserTestIdentification , UpdateView):
+
+class UserUpdateView(LoginRequiredMixin, UserTestIdentification, UpdateView):
     model = User
     form_class = UserUpdateForm
     success_url = reverse_lazy('users_list')
     template_name = 'users/update.html'
-    
-
 
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, gettext('Пользователь успешно изменен'))
         return response
-
 
 
 class UserDeleteView(LoginRequiredMixin, UserTestIdentification, DeleteView):

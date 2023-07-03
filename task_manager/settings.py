@@ -38,8 +38,6 @@ ALLOWED_HOSTS = [
     os.getenv('DEPLOY_HOST'),
 ]
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -169,7 +167,7 @@ BOOTSTRAP4 = {
     'success_css_class': 'is-valid',
 
     # Renderers (only set these if you have studied the source and understand the inner workings)
-    'formset_renderers':{
+    'formset_renderers': {
         'default': 'bootstrap4.renderers.FormsetRenderer',
     },
     'form_renderers': {
@@ -226,6 +224,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ROLLBAR = {
     'access_token': os.getenv('ROLLBAR_ACCESS_TOKEN'),
-    'environment': 'development' if DEBUG else 'production', 
+    'environment': 'development' if DEBUG else 'production',
     'code_version': '1.0', 'root': BASE_DIR,
 }
