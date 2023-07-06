@@ -1,8 +1,8 @@
 from copy import copy
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
 import pytest
 
+from task_manager.tasks.models import Task, Label, Status
 from task_manager.logger_config import logger
 
 USER_PASSWORD = 'test_password'
@@ -13,51 +13,46 @@ USER_DATA = dict(
 )
 
 
-
-@pytest.fixture
-def input_data(request):
-    return copy(request.module.INPUT_DATA)
-
-
-@pytest.fixture
-def create_object(model, input_data):
-
-    def create(**kwargs):
-        logger.error(f'input-data={input_data}, kwargs={kwargs}')
-        input_data.update(kwargs)
-        object_ = model(**input_data)
-        object_.save()
-        logger.error(f'Create obj {object_}')
-        return object_
-    return create
-
-
-@pytest.fixture
-def created_object(create_object):
-    return create_object()
-
-
 @pytest.fixture
 def user():
     user_model = get_user_model()
     user_ = user_model.objects.create_user(USER_DATA)
     user_.set_password(USER_PASSWORD)
     user_.save()
-    logger.error(f'Create user {user_.username}')
+    logger.debug(f'Create user {user_.username}')
     return user_
 
 
 @pytest.fixture
-def logged_in_user(client, user):
+def authorized_user(client, user):
     c = client.login(
         username=user.username,
         password=USER_PASSWORD
     )
-    logger.error(f'Login user {user.username}')
-    logger.error(f'clien login {c}')
+    logger.debug(f'Login user {user.username}')
+    logger.debug(f'clien login {c}')
     return user
+
+@pytest.fixture
+def status():
+    status = Status.objects.create(name='Status test')
+    return status
 
 
 @pytest.fixture
-def authorized(logged_in_user):
-    pass
+def label():
+    label = Label.objects.create(name='Label test')
+    return label
+
+
+@pytest.fixture
+def task(user, status, label):
+    task = Task.objects.create(
+        name='Task test',
+        author=user,
+        executor=user,
+        status=status,
+        description='Description for test',
+    )
+    task.labels.add(label)
+    return task

@@ -1,77 +1,61 @@
-# from copy import copy
-# from django.urls import reverse_lazy
-# from task_manager.labels.models import Label
-# import pytest
-# from task_manager.logger_config import logger
-# from tests.assert_ import redirect_to_login
+from django.urls import reverse_lazy
+import pytest
+from task_manager.logger_config import logger
+from tests.conftest import Label
 
-# CREATE_URL = reverse_lazy('label_create')
-# UPDATE_URL = 'label/{id}/update'
-# DELETE_URL = 'label/{id}/delete'
-# INPUT_DATA = dict(name='label_test_name')
+CREATE_URL = reverse_lazy('label_create')
+UPDATE_URL = '/labels//{id}/update'
+DELETE_URL = '/labels//{id}/delete'
+LABEL_NAME = 'New Label'
+NEW_LABEL_NAME = 'Updated Label'
 
-
-# @pytest.fixture
-# def model():
-#     logger.error(Label)
-#     return Label
-
-# @pytest.fixture
-# def input_data(request):
-#     return copy(request.module.INPUT_DATA)
+@pytest.mark.usefixtures('authorized_user')
+@pytest.mark.django_db
+def test_create_label(client):
+    response = client.post(CREATE_URL, data={'name': LABEL_NAME})
+    logger.error(f'Resp label {Label.objects.get(name=LABEL_NAME)}')
+    assert response.status_code == 302
+    assert Label.objects.filter(name="New Label").exists()
 
 
-# @pytest.fixture
-# def create_object(model, input_data):
-
-#     def create(**kwargs):
-#         input_data.update(kwargs)
-#         object_ = model(**input_data)
-#         object_.save()
-#         logger.error(f'Create obj {object_}')
-#         return object_
-#     return create
+@pytest.mark.django_db
+def test_create_label_not_auth(client):
+    client.post(CREATE_URL, data={'name': LABEL_NAME})
+    assert not Label.objects.filter(name="New Label").exists()
 
 
-# @pytest.fixture
-# def created_object(create_object):
-#     return create_object()
+@pytest.mark.usefixtures('authorized_user')
+@pytest.mark.django_db
+def test_update_label(client, label):
+    url = UPDATE_URL.format(id=label.id)
+    logger.error(f'label update url == {url}')
+    # client.post(url, data={'name': NEW_LABEL_NAME})
+    client.post('/labels/1/update', data={'name': NEW_LABEL_NAME})
+    updated_label = Label.objects.get(id=label.id)
+    assert updated_label.name == NEW_LABEL_NAME
 
-# @pytest.mark.usefixtures('authorized')
+
+# @pytest.mark.usefixtures('authorized_user')
 # @pytest.mark.django_db
-# def test_create(client, model, input_data):
-#     request = client.post(CREATE_URL, input_data)
-#     logger.debug(f'label model {request}')
-#     assert model.objects.get(name=input_data['name'])
+# def test_exist(client, label):
+#     request = client.get('/labels/')
+#     assert '/labels/1/update' in request.content.decode()
+#     assert label.name == 'Label test'
+    
 
 
-# @pytest.mark.usefixtures('authorized')
-# @pytest.mark.django_db
-# def test_update(client, model, input_data, created_object):
-#     old_name = created_object.name
-#     input_data['name'] = 'new_name'
-#     client.post(UPDATE_URL.format(id=created_object.id), input_data)
-#     assert model.objects.filter(name=old_name).count() == 0
-#     assert model.objects.get(name=input_data['name'])
+@pytest.mark.usefixtures('authorized_user')
+@pytest.mark.django_db
+def test_delete_label(client, label):
+    url = DELETE_URL.format(id=label.id)
+    logger.debug(f'label delete url == {url}')
+    client.post(url)
+    assert not Label.objects.filter(id=label.id).exists()
 
 
-# @pytest.mark.usefixtures('authorized')
-# @pytest.mark.django_db
-# def test_delete(client, model, input_data, created_object):
-#     client.post(DELETE_URL.format(id=created_object.id))
-#     assert model.objects.filter(name=created_object.id).count() == 0
-
-
-# @pytest.mark.parametrize(
-#     ('url', 'params'),
-#     [(UPDATE_URL, {'name': 'other'}), (DELETE_URL, {})]
-# )
-# @pytest.mark.django_db
-# def test_unauthorized(
-#         client, model, created_object, url, params, input_data
-# ):
-#     current_params = ({**input_data, **params} if params else {})
-#     response = client.post(url.format(id=created_object.id), current_params)
-#     assert redirect_to_login(response)
-#     current_status = model.objects.get(id=created_object.id)
-#     assert current_status == created_object
+@pytest.mark.django_db
+def test_delete_label_not_auth(client, label):
+    url = DELETE_URL.format(id=label.id)
+    logger.debug(f'label delete url == {url}')
+    client.post(url)
+    assert Label.objects.filter(id=label.id).exists()
