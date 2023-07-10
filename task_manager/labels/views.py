@@ -6,18 +6,18 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
 from django.utils.translation import gettext
 from task_manager.logger_config import logger
-
+from task_manager.users.views import UserLoginRequiredMixin
 from task_manager.labels.models import Label
 from task_manager.labels.forms import LabelForm
 
 
-class LabelListView(LoginRequiredMixin, ListView):
+class LabelListView(UserLoginRequiredMixin, ListView):
     model = Label
     template_name = 'labels/list.html'
     context_object_name = 'labels'
 
 
-class LabelCreateView(LoginRequiredMixin, CreateView):
+class LabelCreateView(UserLoginRequiredMixin, CreateView):
     template_name = 'labels/create.html'
     form_class = LabelForm
     success_url = reverse_lazy('labels_list')
@@ -28,7 +28,7 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class LabelUpdateView(LoginRequiredMixin, UpdateView):
+class LabelUpdateView(UserLoginRequiredMixin, UpdateView):
     model = Label
     template_name = 'labels/update.html'
     form_class = LabelForm
@@ -40,7 +40,7 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class LabelDeleteView(LoginRequiredMixin, DeleteView):
+class LabelDeleteView(UserLoginRequiredMixin, DeleteView):
     model = Label
     template_name = 'labels/delete.html'
     success_url = reverse_lazy('labels_list')

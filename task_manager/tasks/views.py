@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.utils.translation import gettext
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
@@ -23,6 +22,12 @@ class TasksListView(UserLoginRequiredMixin, FilterView):
     context_object_name = 'tasks'
     filter_backends = [DjangoFilterBackend]
     filterset_class = TaskFilter
+
+
+class TaskDetailView(UserLoginRequiredMixin, DetailView):
+    model = Task
+    template_name = 'tasks/show.html'
+    context_object_name = 'task'
 
 
 class TaskCreateView(UserLoginRequiredMixin, CreateView):

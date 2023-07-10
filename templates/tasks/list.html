@@ -53,7 +53,7 @@
             {{ task.id }}
         </td>
         <td>
-            {{ task.name }}          
+            <a class="nav-link" href="{% url 'task_show' task.pk %}">{{ task.name }}</a>      
         </td>
         <td>
             {{ task.description }}          
