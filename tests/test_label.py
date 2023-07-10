@@ -20,7 +20,8 @@ def test_create_label(client):
 
 @pytest.mark.django_db
 def test_create_label_not_auth(client):
-    client.post(CREATE_URL, data={'name': LABEL_NAME})
+    response = client.post(CREATE_URL, data={'name': LABEL_NAME})
+    assert response.url == '/login/'
     assert not Label.objects.filter(name="New Label").exists()
 
 
@@ -29,19 +30,19 @@ def test_create_label_not_auth(client):
 def test_update_label(client, label):
     url = UPDATE_URL.format(id=label.id)
     logger.error(f'label update url == {url}')
-    # client.post(url, data={'name': NEW_LABEL_NAME})
-    client.post('/labels/1/update', data={'name': NEW_LABEL_NAME})
+    client.post(url, data={'name': NEW_LABEL_NAME})
+    # client.post('/labels/1/update', data={'name': NEW_LABEL_NAME})
     updated_label = Label.objects.get(id=label.id)
     assert updated_label.name == NEW_LABEL_NAME
 
 
-# @pytest.mark.usefixtures('authorized_user')
-# @pytest.mark.django_db
-# def test_exist(client, label):
-#     request = client.get('/labels/')
-#     assert '/labels/1/update' in request.content.decode()
-#     assert label.name == 'Label test'
-    
+@pytest.mark.django_db
+def test_update_label(client, label):
+    url = UPDATE_URL.format(id=label.id)
+    logger.error(f'label update url == {url}')
+    response = client.post(url, data={'name': NEW_LABEL_NAME})
+    # client.post('/labels/1/update', data={'name': NEW_LABEL_NAME})
+    assert response.url == '/login/' 
 
 
 @pytest.mark.usefixtures('authorized_user')
@@ -57,5 +58,6 @@ def test_delete_label(client, label):
 def test_delete_label_not_auth(client, label):
     url = DELETE_URL.format(id=label.id)
     logger.debug(f'label delete url == {url}')
-    client.post(url)
+    response = client.post(url)
+    assert response.url == '/login/'
     assert Label.objects.filter(id=label.id).exists()

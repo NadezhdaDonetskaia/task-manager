@@ -1,8 +1,6 @@
-from copy import copy
-from django.contrib.auth import get_user_model
 import pytest
 
-from task_manager.tasks.models import Task, Label, Status
+from task_manager.tasks.models import Task, Label, Status, User
 from task_manager.logger_config import logger
 
 USER_PASSWORD = 'test_password'
@@ -15,7 +13,7 @@ USER_DATA = dict(
 
 @pytest.fixture
 def user():
-    user_model = get_user_model()
+    user_model = User
     user_ = user_model.objects.create_user(USER_DATA)
     user_.set_password(USER_PASSWORD)
     user_.save()
