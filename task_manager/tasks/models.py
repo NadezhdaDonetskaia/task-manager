@@ -24,7 +24,7 @@ class Task(models.Model):
                                default=None, verbose_name=gettext('Автор'))
     executor = models.ForeignKey(User, on_delete=models.PROTECT,
                                  related_name='executed_tasks', blank=True, null=True,
-                                 verbose_name=gettext('Исполнитель'))
+                                 verbose_name=gettext('Исполнитель'), default='')
 
     status = models.ForeignKey(Status, on_delete=models.PROTECT, blank=False,
                                verbose_name=gettext('Статус'))

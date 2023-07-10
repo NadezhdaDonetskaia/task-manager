@@ -65,7 +65,9 @@
             {{ task.author }}
         </td>
         <td>
-            {{ task.executor }}
+            {% if task.executor %}
+                {{ task.executor }}
+            {% endif %}                
         </td>
         <td>
             {{ user.created_at }}

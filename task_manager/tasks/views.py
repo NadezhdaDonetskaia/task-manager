@@ -45,7 +45,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, gettext('Задача успешно изменена'))
         return super().form_valid(form)
-
+    
 
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
@@ -53,6 +53,10 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('tasks_list')
 
     def form_valid(self, form):
+        task = self.get_object()
+        if self.request.user.pk != task.author.pk:
+            messages.error(self.request, gettext('Задачу может удалить только ее автор'))
+            return redirect('tasks_list')
         try:
             delete = super().form_valid(form)
             messages.success(self.request, gettext('Задача успешно удалена'))    
