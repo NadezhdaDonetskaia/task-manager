@@ -4,8 +4,8 @@ from task_manager.logger_config import logger
 from tests.conftest import Label
 
 CREATE_URL = reverse_lazy('label_create')
-UPDATE_URL = '/labels/{id}/update'
-DELETE_URL = '/labels/{id}/delete'
+UPDATE_URL = '/labels/{id}/update/'
+DELETE_URL = '/labels/{id}/delete/'
 LABEL_NAME = 'New Label'
 NEW_LABEL_NAME = 'Updated Label'
 

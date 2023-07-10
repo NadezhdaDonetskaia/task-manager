@@ -5,8 +5,8 @@ from task_manager.logger_config import logger
 from tests.conftest import Status
 
 CREATE_URL = reverse_lazy('status_create')
-UPDATE_URL = 'status//{id}/update'
-DELETE_URL = 'status//{id}/delete'
+UPDATE_URL = 'status/{id}/update/'
+DELETE_URL = 'status/{id}/delete/'
 INPUT_DATA = dict(name='status_test')
 
 

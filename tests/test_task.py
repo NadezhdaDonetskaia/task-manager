@@ -4,8 +4,8 @@ from task_manager.logger_config import logger
 from tests.conftest import Task, Label, Status
 
 CREATE_URL = reverse_lazy('task_create')
-UPDATE_URL = 'task//{id}/update'
-DELETE_URL = 'task//{id}/delete'
+UPDATE_URL = 'task/{id}/update/'
+DELETE_URL = 'task/{id}/delete/'
 INPUT_DATA = dict(name='task_test')
 
 
