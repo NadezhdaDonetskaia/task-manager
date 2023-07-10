@@ -8,10 +8,14 @@ from task_manager.logger_config import logger
 
 class TaskFilter(FilterSet, AllValuesFilter):
 
-    status = ModelChoiceFilter(field_name='status', queryset=Status.objects.all(), label=gettext('Статус'))
-    executor = ModelChoiceFilter(field_name='executor', queryset=User.objects.all(), label=gettext('Исполнитель'))
-    labels = ModelMultipleChoiceFilter(field_name='labels', queryset=Label.objects.all(), label=gettext('Метка'))
-    my_tasks = BooleanFilter(field_name='my_tasks', method='filter_my_tasks', label='Только свои задачи', widget=forms.CheckboxInput())
+    status = ModelChoiceFilter(field_name='status', queryset=Status.objects.all(),
+                               label=gettext('Статус'))
+    executor = ModelChoiceFilter(field_name='executor', queryset=User.objects.all(),
+                                 label=gettext('Исполнитель'))
+    labels = ModelMultipleChoiceFilter(field_name='labels', queryset=Label.objects.all(),
+                                       label=gettext('Метка'))
+    my_tasks = BooleanFilter(field_name='my_tasks', method='filter_my_tasks',
+                             label='Только свои задачи', widget=forms.CheckboxInput())
 
     class Meta:
         model = Task

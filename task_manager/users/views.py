@@ -123,5 +123,6 @@ class UserDeleteView(UserLoginRequiredMixin, UserTestIdentification, DeleteView)
             messages.success(self.request, gettext('Пользователь успешно удален'))
             return delete
         except ProtectedError:
-            messages.error(self.request, gettext('Невозможно удалить пользователя, потому что он используется'))
+            messages.error(self.request,
+                           gettext('Невозможно удалить пользователя, потому что он используется'))
             return redirect('users_list')
