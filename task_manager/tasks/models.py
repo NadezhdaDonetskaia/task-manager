@@ -1,24 +1,26 @@
-# from django.contrib import messages
-# from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth.models import User
 
 from django.db import models
-# from django.db.models.signals import pre_delete
-# from django.dispatch import receiver
-# from django.utils import timezone
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+from django.utils import timezone
 from django.utils.translation import gettext
+
+from django.core.exceptions import ValidationError
 
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
 from task_manager.users.models import User
 
-# from task_manager.logger_config import logger
+from task_manager.logger_config import logger
 
 
 class Task(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='Имя')
     description = models.TextField(blank=True, verbose_name='Описание')
 
-    author = models.ForeignKey(User, on_delete=models.SET_DEFAULT,
+    author = models.ForeignKey(User, on_delete=models.PROTECT,
                                default=None, verbose_name=gettext('Автор'))
     executor = models.ForeignKey(User, on_delete=models.PROTECT,
                                  related_name='executed_tasks', blank=True, null=True,
@@ -26,7 +28,7 @@ class Task(models.Model):
 
     status = models.ForeignKey(Status, on_delete=models.PROTECT, blank=False,
                                verbose_name=gettext('Статус'))
-    label = models.ForeignKey(Label, on_delete=models.PROTECT, blank=True, null=True,
+    label = models.ManyToManyField(Label, blank=True, null=True,
                               verbose_name=gettext('Метки'))
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
@@ -35,27 +37,18 @@ class Task(models.Model):
         return self.name
 
 
-# @receiver(pre_delete, sender=User)
-# def prevent_user_deletion(sender, instance=modelTask.Task, **kwargs):
-#     tasks_count = instance.objects.filter(status=sender)
-#     if tasks_count > 0:
-#         logger.error(f"Попытка удалить пользователя {sender.name}, связанного с задачей")
-#         messages.error(gettext(f"User '{instance.name}' cannot be deleted as it is associated with {tasks_count} tasks."))
-#         raise Exception(f"User '{instance.name}' cannot be deleted as it is associated with {tasks_count} tasks.")
-
-
-# @receiver(pre_delete, sender=Label)
-# def prevent_status_deletion(sender, instance=Task, **kwargs):
-#     tasks_count = instance.objects.filter(status=sender)
-#     if tasks_count > 0:
-#         logger.error(gettext(f"Попытка удалить метку {sender.name}, связанного с задачей"))
-#         messages.error(gettext(f"Label '{instance.name}' cannot be deleted as it is associated with {tasks_count} tasks."))
-#         raise Exception(f"Label '{instance.name}' cannot be deleted as it is associated with {tasks_count} tasks.")
+@receiver(pre_delete, sender=Label)
+def prevent_label_deletion(sender, instance, **kwargs):
+    if instance.task_set.exists():
+        raise ValidationError('Невозможно удалить метку, потому что она используется')
+    
 
 # @receiver(pre_delete, sender=Status)
-# def prevent_status_deletion(sender, instance=Task, **kwargs):
-#     tasks_count = instance.objects.filter(status=sender)
-#     if tasks_count > 0:
-#         logger.error(gettext(f"Попытка удалить пользователя {sender.name}, связанного с задачей"))
-#         messages.error(gettext(f"Status '{instance.name}' cannot be deleted as it is associated with {tasks_count} tasks."))
-#         raise Exception(f"Status '{instance.name}' cannot be deleted as it is associated with {tasks_count} tasks.")
+# def prevent_label_deletion(sender, instance, **kwargs):
+#     if instance.task_set.exists():
+#         raise ValidationError('Невозможно удалить статус, потому что он используется')
+    
+# @receiver(pre_delete, sender=User)
+# def prevent_label_deletion(sender, instance, **kwargs):
+#     if instance.task_set.exists():
+#         raise ValidationError('Невозможно удалить пользователя, потому что он используется')
