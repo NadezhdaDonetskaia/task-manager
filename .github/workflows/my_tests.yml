@@ -10,19 +10,19 @@ jobs:
         run: |
           pip install poetry
           make install
-    #   - name: Create Reporter
-    #     run: |
-    #       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-    #       chmod +x ./cc-test-reporter
-    #       ./cc-test-reporter before-build
+      - name: Create Reporter
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
       - name: Lint
         run: |
           make lint
       - name: Test
         run: |
           make run_report_test
-    #   - name: Sending Reporter
-    #     env:
-        #   GITHUB_TOKEN: ${{ secrets.MINILAB_ID }}
-    #     run: |
-    #       ./cc-test-reporter after-build -r "$GITHUB_TOKEN"
+      - name: Sending Reporter
+        env:
+          GITHUB_TOKEN: ${{ secrets.MINILAB_ID }}
+        run: |
+          ./cc-test-reporter after-build -r "$GITHUB_TOKEN"
