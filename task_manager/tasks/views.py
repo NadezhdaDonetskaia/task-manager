@@ -51,7 +51,7 @@ class TaskUpdateView(UserLoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, gettext('Задача успешно изменена'))
         return super().form_valid(form)
-    
+
 
 class TaskDeleteView(UserLoginRequiredMixin, DeleteView):
     model = Task
@@ -65,8 +65,8 @@ class TaskDeleteView(UserLoginRequiredMixin, DeleteView):
             return redirect('tasks_list')
         try:
             delete = super().form_valid(form)
-            messages.success(self.request, gettext('Задача успешно удалена'))    
-            return delete  
+            messages.success(self.request, gettext('Задача успешно удалена'))
+            return delete
         except ValidationError as err:
             messages.error(self.request, err.messages[0])
             return redirect('tasks_list')

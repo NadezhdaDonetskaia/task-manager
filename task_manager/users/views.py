@@ -7,8 +7,6 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from django.utils.translation import gettext
 
-from django.shortcuts import redirect
-
 from task_manager.users.models import User
 from task_manager.users.forms import UserRegistrationForm, UserUpdateForm
 from task_manager.logger_config import logger
@@ -122,8 +120,8 @@ class UserDeleteView(UserLoginRequiredMixin, UserTestIdentification, DeleteView)
     def form_valid(self, form):
         try:
             delete = super().form_valid(form)
-            messages.success(self.request, gettext('Пользователь успешно удален'))    
-            return delete  
-        except ProtectedError as err:
+            messages.success(self.request, gettext('Пользователь успешно удален'))
+            return delete
+        except ProtectedError:
             messages.error(self.request, gettext('Невозможно удалить пользователя, потому что он используется'))
             return redirect('users_list')

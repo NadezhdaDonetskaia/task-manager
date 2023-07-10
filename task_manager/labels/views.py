@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
@@ -48,8 +47,8 @@ class LabelDeleteView(UserLoginRequiredMixin, DeleteView):
     def form_valid(self, form):
         try:
             delete = super().form_valid(form)
-            messages.success(self.request, gettext('Метка успешно удалена'))    
-            return delete  
+            messages.success(self.request, gettext('Метка успешно удалена'))
+            return delete
         except ValidationError as err:
             messages.error(self.request, err.messages[0])
             return redirect('labels_list')

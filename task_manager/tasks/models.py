@@ -1,10 +1,6 @@
-from django.contrib import messages
-from django.contrib.auth.models import User
-
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
-from django.utils import timezone
 from django.utils.translation import gettext
 
 from django.core.exceptions import ValidationError
@@ -29,7 +25,7 @@ class Task(models.Model):
     status = models.ForeignKey(Status, on_delete=models.PROTECT, blank=False,
                                verbose_name=gettext('Статус'))
     label = models.ManyToManyField(Label, blank=True, null=True,
-                              verbose_name=gettext('Метки'))
+                                   verbose_name=gettext('Метки'))
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -40,15 +36,5 @@ class Task(models.Model):
 @receiver(pre_delete, sender=Label)
 def prevent_label_deletion(sender, instance, **kwargs):
     if instance.task_set.exists():
+        logger.debug(f'Невозможно удалить метку {instance}')
         raise ValidationError('Невозможно удалить метку, потому что она используется')
-    
-
-# @receiver(pre_delete, sender=Status)
-# def prevent_label_deletion(sender, instance, **kwargs):
-#     if instance.task_set.exists():
-#         raise ValidationError('Невозможно удалить статус, потому что он используется')
-    
-# @receiver(pre_delete, sender=User)
-# def prevent_label_deletion(sender, instance, **kwargs):
-#     if instance.task_set.exists():
-#         raise ValidationError('Невозможно удалить пользователя, потому что он используется')
