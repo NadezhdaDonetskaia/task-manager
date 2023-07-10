@@ -7,18 +7,18 @@ from django.utils.translation import gettext
 from django.shortcuts import redirect
 
 from task_manager.logger_config import logger
-
+from task_manager.users.views import UserLoginRequiredMixin
 from task_manager.statuses.models import Status
 from task_manager.statuses.forms import StatusForm
 
 
-class StatusListView(LoginRequiredMixin, ListView):
+class StatusListView(UserLoginRequiredMixin, ListView):
     model = Status
     template_name = 'statuses/list.html'
     context_object_name = 'statuses'
 
 
-class StatusCreateView(LoginRequiredMixin, CreateView):
+class StatusCreateView(UserLoginRequiredMixin, CreateView):
     template_name = 'statuses/create.html'
     form_class = StatusForm
     success_url = reverse_lazy('statuses_list')
@@ -29,7 +29,7 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class StatusUpdateView(LoginRequiredMixin, UpdateView):
+class StatusUpdateView(UserLoginRequiredMixin, UpdateView):
     model = Status
     template_name = 'statuses/update.html'
     form_class = StatusForm
@@ -41,7 +41,7 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class StatusDeleteView(LoginRequiredMixin, DeleteView):
+class StatusDeleteView(UserLoginRequiredMixin, DeleteView):
     model = Status
     template_name = 'statuses/delete.html'
     success_url = reverse_lazy('statuses_list')

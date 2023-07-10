@@ -76,6 +76,15 @@ class UserDetailView(DetailView):
     fields = ['username', 'first_name', 'last_name']
 
 
+class UserLoginRequiredMixin(LoginRequiredMixin):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, gettext('Вы не авторизованы! Пожалуйста, выполните вход.'))
+            return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
+
+
 class UserTestIdentification(UserPassesTestMixin):
 
     def test_func(self):
@@ -93,7 +102,7 @@ class UserTestIdentification(UserPassesTestMixin):
         return super().handle_no_permission()
 
 
-class UserUpdateView(LoginRequiredMixin, UserTestIdentification, UpdateView):
+class UserUpdateView(UserLoginRequiredMixin, UserTestIdentification, UpdateView):
     model = User
     form_class = UserUpdateForm
     success_url = reverse_lazy('users_list')
@@ -105,7 +114,7 @@ class UserUpdateView(LoginRequiredMixin, UserTestIdentification, UpdateView):
         return response
 
 
-class UserDeleteView(LoginRequiredMixin, UserTestIdentification, DeleteView):
+class UserDeleteView(UserLoginRequiredMixin, UserTestIdentification, DeleteView):
     model = User
     success_url = reverse_lazy('users_list')
     template_name = 'users/delete.html'

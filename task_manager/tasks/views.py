@@ -7,16 +7,17 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
 
 from django_filters.views import FilterView
+from django_filters.rest_framework import DjangoFilterBackend
 
 from task_manager.logger_config import logger
 
 from task_manager.tasks.models import Task
 from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.forms import TaskForm
-from django_filters.rest_framework import DjangoFilterBackend
+from task_manager.users.views import UserLoginRequiredMixin
 
 
-class TasksListView(LoginRequiredMixin, FilterView):
+class TasksListView(UserLoginRequiredMixin, FilterView):
     model = Task
     template_name = 'tasks/list.html'
     context_object_name = 'tasks'
@@ -24,7 +25,7 @@ class TasksListView(LoginRequiredMixin, FilterView):
     filterset_class = TaskFilter
 
 
-class TaskCreateView(LoginRequiredMixin, CreateView):
+class TaskCreateView(UserLoginRequiredMixin, CreateView):
     template_name = 'tasks/create.html'
     form_class = TaskForm
     success_url = reverse_lazy('tasks_list')
@@ -36,7 +37,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class TaskUpdateView(LoginRequiredMixin, UpdateView):
+class TaskUpdateView(UserLoginRequiredMixin, UpdateView):
     model = Task
     template_name = 'tasks/update.html'
     form_class = TaskForm
@@ -47,7 +48,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
     
 
-class TaskDeleteView(LoginRequiredMixin, DeleteView):
+class TaskDeleteView(UserLoginRequiredMixin, DeleteView):
     model = Task
     template_name = 'tasks/delete.html'
     success_url = reverse_lazy('tasks_list')
