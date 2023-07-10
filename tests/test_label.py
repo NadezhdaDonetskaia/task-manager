@@ -9,6 +9,7 @@ DELETE_URL = '/labels/{id}/delete/'
 LABEL_NAME = 'New Label'
 NEW_LABEL_NAME = 'Updated Label'
 
+
 @pytest.mark.usefixtures('authorized_user')
 @pytest.mark.django_db
 def test_create_label(client):
@@ -39,7 +40,7 @@ def test_update_label_not_auth(client, label):
     url = UPDATE_URL.format(id=label.id)
     logger.error(f'label update url == {url}')
     response = client.post(url, data={'name': NEW_LABEL_NAME})
-    assert response.url == '/login/' 
+    assert response.url == '/login/'
 
 
 @pytest.mark.usefixtures('authorized_user')

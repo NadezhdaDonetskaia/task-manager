@@ -31,6 +31,7 @@ def authorized_user(client, user):
     logger.debug(f'clien login {c}')
     return user
 
+
 @pytest.fixture
 def status():
     status = Status.objects.create(name='Status test')

@@ -1,8 +1,8 @@
 from django.urls import reverse_lazy
 import pytest
 from task_manager.logger_config import logger
-from task_manager.logger_config import logger
 from tests.conftest import Status
+
 
 CREATE_URL = reverse_lazy('status_create')
 UPDATE_URL = '/statuses/{id}/update/'
@@ -42,7 +42,7 @@ def test_update_status_not_auth(client, status):
     url = UPDATE_URL.format(id=status.id)
     logger.error(f'status update url == {url}')
     response = client.post(url, data={'name': NEW_STATUS_NAME})
-    assert response.url == '/login/' 
+    assert response.url == '/login/'
 
 
 @pytest.mark.usefixtures('authorized_user')
@@ -60,5 +60,3 @@ def test_delete_status_not_auth(client, status):
     response = client.post(url)
     assert response.url == '/login/'
     assert Status.objects.filter(id=status.id).exists()
-
-

@@ -1,7 +1,8 @@
 from django.urls import reverse_lazy
 import pytest
 from task_manager.logger_config import logger
-from tests.conftest import Task, Label, Status
+from tests.conftest import Task
+
 
 CREATE_URL = reverse_lazy('task_create')
 UPDATE_URL = 'task/{id}/update/'
@@ -18,4 +19,3 @@ def test_create_task(client, label, status):
     logger.debug(f'Resp task {response}')
     assert response.status_code == 302
     assert Task.objects.filter(name="New Task").exists()
-
