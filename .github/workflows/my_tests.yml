@@ -19,6 +19,8 @@ jobs:
         run: |
           make lint
       - name: Test
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
         run: |
           make run_report_test
       - name: Sending Reporter
