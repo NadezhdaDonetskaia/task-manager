@@ -18,6 +18,10 @@ jobs:
       - name: Lint
         run: |
           make lint
+      - name: Add enviroment variables to .env
+        run: |
+          echo DATABASE_URL="sqlite:///bd.sqlite3" >> .env
+          echo SECRET_KEY=${{ vars.SECRET_KEY }} >> .env
       - name: Test
         run: |          
           export DJANGO_SETTINGS_MODULE=task_manager.settings
