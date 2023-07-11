@@ -19,9 +19,8 @@ jobs:
         run: |
           make lint
       - name: Test
-        env:
-          DATABASE_URL: ${{ env.DATABASE_URL }}
         run: |
+          export DJANGO_SETTINGS_MODULE=task_manager.settings
           make run_report_test
       - name: Sending Reporter
         env:
