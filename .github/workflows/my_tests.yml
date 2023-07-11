@@ -21,7 +21,7 @@ jobs:
       - name: Add enviroment variables to .env
         run: |
           echo DATABASE_URL="sqlite:///bd.sqlite3" >> .env
-          echo SECRET_KEY=${{ vars.SECRET_KEY }} >> .env
+          echo SECRET_KEY="some secret key 123" >> .env
       - name: Test
         run: |          
           export DJANGO_SETTINGS_MODULE=task_manager.settings
