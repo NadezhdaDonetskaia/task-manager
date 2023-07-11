@@ -20,7 +20,7 @@ jobs:
           make lint
       - name: Test
         run: |          
-          # export DJANGO_SETTINGS_MODULE=task_manager.settings
+          export DJANGO_SETTINGS_MODULE=task_manager.settings
           make run_report_test
       - name: Sending Reporter
         env:
