@@ -2,7 +2,6 @@ from django.urls import reverse_lazy
 import pytest
 from task_manager.users.models import User
 from task_manager.logger_config import logger
-from tests.conftest import USER_PASSWORD
 
 
 CREATE_URL = reverse_lazy('user_create')

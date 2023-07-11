@@ -53,6 +53,6 @@ UID="$(id -u)" GID="$(id -g)" docker-compose up
 
 | codeclimate | coverage | tests |
 |:---:|:---:|:---:|
-| [![codeclimate](https://api.codeclimate.com/v1/badges/52d3833c844707328f27/maintainability)](https://codeclimate.com/github/Nella611/python-project-lvl4/maintainability) | [![Test Coverage](https://api.codeclimate.com/v1/badges/52d3833c844707328f27/test_coverage)](https://codeclimate.com/github/Nella611/python-project-lvl4/test_coverage) | [![Actions Status](https://github.com/Nella611/python-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/Nella611/python-project-lvl4/actions) |
+| [![Maintainability](https://api.codeclimate.com/v1/badges/dae3eddd4dc3b0f6e903/maintainability)](https://codeclimate.com/github/Nella611/task-manager/maintainability) | [![Test Coverage](https://api.codeclimate.com/v1/badges/dae3eddd4dc3b0f6e903/test_coverage)](https://codeclimate.com/github/Nella611/task-manager/test_coverage) | [![Actions Status](https://github.com/Nella611/python-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/Nella611/python-project-lvl4/actions) |
 
 
