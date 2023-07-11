@@ -1,7 +1,5 @@
 name: pytest-with-lint
 on: push
-env:
-  env_var:${{ vars.DATABASE_URL }}
 jobs:
   push:
     runs-on: ubuntu-latest
@@ -21,8 +19,8 @@ jobs:
         run: |
           make lint
       - name: Test
-        run: |
-          export DJANGO_SETTINGS_MODULE=task_manager.settings
+        run: |          
+          # export DJANGO_SETTINGS_MODULE=task_manager.settings
           make run_report_test
       - name: Sending Reporter
         env:
