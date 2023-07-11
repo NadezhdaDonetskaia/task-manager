@@ -1,5 +1,7 @@
 name: pytest-with-lint
 on: push
+env:
+  DATABASE_URL:${{ env.DATABASE_URL }}
 jobs:
   push:
     runs-on: ubuntu-latest
