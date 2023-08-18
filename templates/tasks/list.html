@@ -8,8 +8,8 @@
 
 {% block content %}
 <div class="container wrapper flex-grow-1">
-    <h1 class="my-4">{% translate 'Задачи' %}</h1>
-<a class="nav-link" href="{% url 'task_create' %}">{% translate 'Создать задачу' %}</a>
+    <h1 class="my-4">{% translate 'Tasks' %}</h1>
+<a class="nav-link" href="{% url 'task_create' %}">{% translate 'Create task' %}</a>
 
 <div class="container">
     <form method="GET">
@@ -26,7 +26,7 @@
                 {% bootstrap_field field %}
             {% endif %}
         {% endfor %}
-        <button type="submit" class="btn btn-primary">{% translate 'Показать' %}</button>
+        <button type="submit" class="btn btn-primary">{% translate 'Show' %}</button>
     </form>
 </div>
 
@@ -37,12 +37,12 @@
     <thead>
           <tr>
             <th>id</th>
-            <th>{% translate 'Имя' %}</th>
-            <th>{% translate 'Описание' %}</th>
-            <th>{% translate 'Статус' %}</th>
-            <th>{% translate 'Автор' %}</th>
-            <th>{% translate 'Исполнитель' %}</th>
-            <th>{% translate 'Дата создания' %}</th>
+            <th>{% translate 'Name' %}</th>
+            <th>{% translate 'Description' %}</th>
+            <th>{% translate 'Executor' %}</th>
+            <th>{% translate 'Author' %}</th>
+            <th>{% translate 'Executor' %}</th>
+            <th>{% translate 'Created at' %}</th>
             <th></th>
           </tr>
     </thead>
@@ -74,11 +74,11 @@
         </td>
          <td>
           <a href="{% url 'task_update' task.pk %}">
-              {% translate 'Изменить' %}
+              {% translate 'Change' %}
           </a>
           <br>
           <a href="{% url 'task_delete' task.pk %}">
-              {% translate 'Удалить' %}
+              {% translate 'Delete' %}
           </a>
         </td>
      </tr>

@@ -13,8 +13,8 @@ class UserRegistrationForm(UserCreationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
-    password1 = forms.CharField(label=gettext("Пароль"), widget=forms.PasswordInput)
-    password2 = forms.CharField(label=gettext("Подтверждение пароля"), widget=forms.PasswordInput)
+    password1 = forms.CharField(label=gettext("Password"), widget=forms.PasswordInput)
+    password2 = forms.CharField(label=gettext("Password confirmation"), widget=forms.PasswordInput)
 
     class Meta:
         model = User

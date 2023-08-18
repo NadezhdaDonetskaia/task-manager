@@ -10,11 +10,11 @@
 
 {% block content %}
 <div class="container">
-  <h1>{% trans "Изменение статуса" %}</h1>
+  <h1>{% trans "Change task" %}</h1>
   <form method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
-    <button type="submit" class="btn btn-primary">{% trans "Изменить" %}</button>
+    <button type="submit" class="btn btn-primary">{% trans "Change" %}</button>
   </form>
 </div>
 {% endblock %}

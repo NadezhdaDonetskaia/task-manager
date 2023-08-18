@@ -21,13 +21,13 @@ class UserRegistrationView(CreateView):
     def form_valid(self, form):
         logger.debug('Успешная регистрация')
         response = super().form_valid(form)
-        messages.success(self.request, gettext('Пользователь успешно зарегистрирован'))
+        messages.success(self.request, gettext('User successfully registered'))
         return response
 
     def form_invalid(self, form):
         logger.error('Ошибка регистрации')
         response = super().form_invalid(form)
-        messages.error(self.request, gettext('Ошибка регистрации!'))
+        messages.error(self.request, gettext('Registration error!'))
         return response
 
 
@@ -40,14 +40,14 @@ class UserLoginView(LoginView):
         logger.error('Ошибка входа')
         response = super().form_invalid(form)
         messages.error(self.request,
-                       gettext('Пожалуйста, введите правильные имя пользователя и пароль.\
-                                Оба поля могут быть чувствительны к регистру.'))
+                       gettext('Please enter the correct username and password.\
+                                Both fields can be case sensitive.'))
         return response
 
     def form_valid(self, form):
         logger.debug("Успешный вход в систему")
         response = super().form_valid(form)
-        messages.success(self.request, gettext('Вы залогинены'))
+        messages.success(self.request, gettext('You are logged in'))
         return response
 
 
@@ -56,7 +56,7 @@ class UserLogoutView(LogoutView):
 
     def dispatch(self, request, *args, **kwargs):
         response = super().dispatch(request, *args, **kwargs)
-        messages.success(self.request, gettext('Вы разлогинены'))
+        messages.success(self.request, gettext('You are logged out'))
         return response
 
 
@@ -78,7 +78,7 @@ class UserLoginRequiredMixin(LoginRequiredMixin):
 
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.is_authenticated:
-            messages.error(self.request, gettext('Вы не авторизованы! Пожалуйста, выполните вход.'))
+            messages.error(self.request, gettext('You are not authorized! Please sign in.'))
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -90,7 +90,7 @@ class UserTestIdentification(UserPassesTestMixin):
             logger.debug('User not match')
             self.raise_exception = False
             messages.error(self.request,
-                           gettext('У вас нет прав для изменения другого пользователя.'))
+                           gettext('You do not have permission to change another user.'))
             return False
         return True
 
@@ -108,7 +108,7 @@ class UserUpdateView(UserLoginRequiredMixin, UserTestIdentification, UpdateView)
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, gettext('Пользователь успешно изменен'))
+        messages.success(self.request, gettext('User changed successfully'))
         return response
 
 
@@ -120,9 +120,9 @@ class UserDeleteView(UserLoginRequiredMixin, UserTestIdentification, DeleteView)
     def form_valid(self, form):
         try:
             delete = super().form_valid(form)
-            messages.success(self.request, gettext('Пользователь успешно удален'))
+            messages.success(self.request, gettext('User deleted successfully'))
             return delete
         except ProtectedError:
             messages.error(self.request,
-                           gettext('Невозможно удалить пользователя, потому что он используется'))
+                           gettext('Cannot delete user because it is in use'))
             return redirect('users_list')

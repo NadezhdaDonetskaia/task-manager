@@ -35,7 +35,7 @@ class LabelUpdateView(UserLoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         logger.debug('Label status update valid')
-        messages.success(self.request, gettext('Метка успешно изменена'))
+        messages.success(self.request, gettext('Label changed successfully'))
         return super().form_valid(form)
 
 
@@ -47,7 +47,7 @@ class LabelDeleteView(UserLoginRequiredMixin, DeleteView):
     def form_valid(self, form):
         try:
             delete = super().form_valid(form)
-            messages.success(self.request, gettext('Метка успешно удалена'))
+            messages.success(self.request, gettext('Label deleted successfully'))
             return delete
         except ValidationError as err:
             messages.error(self.request, err.messages[0])
