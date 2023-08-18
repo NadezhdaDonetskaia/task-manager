@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
 from django.utils.translation import gettext
 from task_manager.logger_config import logger
-from task_manager.users.views import UserLoginRequiredMixin
+from task_manager.views import UserLoginRequiredMixin
 from task_manager.labels.models import Label
 from task_manager.labels.forms import LabelForm
 

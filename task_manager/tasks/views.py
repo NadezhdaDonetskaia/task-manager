@@ -13,7 +13,7 @@ from task_manager.logger_config import logger
 from task_manager.tasks.models import Task
 from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.forms import TaskForm
-from task_manager.users.views import UserLoginRequiredMixin
+from task_manager.views import UserLoginRequiredMixin
 
 
 class TasksListView(UserLoginRequiredMixin, FilterView):

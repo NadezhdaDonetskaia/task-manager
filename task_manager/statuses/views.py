@@ -6,7 +6,7 @@ from django.utils.translation import gettext
 from django.shortcuts import redirect
 
 from task_manager.logger_config import logger
-from task_manager.users.views import UserLoginRequiredMixin
+from task_manager.views import UserLoginRequiredMixin
 from task_manager.statuses.models import Status
 from task_manager.statuses.forms import StatusForm
 

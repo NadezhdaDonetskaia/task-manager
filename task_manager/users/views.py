@@ -10,6 +10,7 @@ from django.utils.translation import gettext
 from task_manager.users.models import User
 from task_manager.users.forms import UserRegistrationForm, UserUpdateForm
 from task_manager.logger_config import logger
+from task_manager.views import UserLoginRequiredMixin
 
 
 class UserRegistrationView(CreateView):
@@ -72,15 +73,6 @@ class UserDetailView(DetailView):
     template_name = 'users/show.html'
     context_object_name = 'user'
     fields = ['username', 'first_name', 'last_name']
-
-
-class UserLoginRequiredMixin(LoginRequiredMixin):
-
-    def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.is_authenticated:
-            messages.error(self.request, gettext('You are not authorized! Please sign in.'))
-            return redirect('login')
-        return super().dispatch(request, *args, **kwargs)
 
 
 class UserTestIdentification(UserPassesTestMixin):
